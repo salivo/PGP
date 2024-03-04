@@ -1,5 +1,7 @@
-# Example file showing a basic pygame "game loop"
+
 import pygame
+
+from canculate import Body
 
 # pygame setup
 pygame.init()
@@ -7,45 +9,51 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 
+ 
+
+x_offset = 640
+y_offset = 360
 
 
-object_display_size = 50
-objects_color = (255,0,0)
-
-class Body():
-    def __init__(self,x,y,mass):
-        self.x = x
-        self.y = y
-        self.mass = mass
-    def draw(self, screen):
-        pygame.draw.rect(screen, objects_color, (self.x, self.y, object_display_size, object_display_size))
+zoom = 25   # 50        100       25 
+tpp = 1  # 0.1        1       0.02
 
 
+
+object_display_size = 400/zoom
+objects_colors = {1:(255,0,0),
+                  2:(0,0,255),
+                  3:(0,255,0)}
+m2px = 50/zoom
 
 bodys = [
-        Body(100,100,10),
-        Body(300,100,10)
+        Body(1, 100000, 0, 0, 0),
+        Body(2, 100000, 0, 100, 0),
+        Body(3, 100000, 0, 50, 86.60254038)
         ]
 
-
+time = 0
 while running:
     # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+    #clear screen
+    screen.fill((0,0,0))
+    #draw objects
     for body in bodys:
-
-
-        body.draw(screen)
-
-
-
-
-    # flip() the display to put your work on screen
+        body.canculate(bodys,time)
+        pygame.draw.circle(screen,
+                         objects_colors[body.id],
+                         (body.pos[0]*m2px+x_offset,
+                          body.pos[1]*m2px+y_offset),
+                        object_display_size)
+    
+    #show screen
     pygame.display.flip()
-
-    clock.tick(24)  # limits FPS to 60
+    #add time to next canculation
+    time += tpp
+    #wait to stabilizate frame
+    clock.tick(24)
 
 pygame.quit()
