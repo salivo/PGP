@@ -13,13 +13,14 @@ math.cos
 class Body():
     def __init__(self, id, mass, v0, x, y):
         self.mass = mass
-        self.v = v0
+        self.v0 = v0
         self.id = id
         self.pos = [x, y]
+        self.speed_vectors = {}
 
     def canculate(self, bodys, t):
         newpos = self.pos
-
+        perbodyV = 0
         if debug:
             print("id:",self.id)
         for body in bodys:
@@ -32,11 +33,14 @@ class Body():
                 angle = math.atan2(abs(rel_y),abs(rel_x)) # in radians!!!!
                 
                 #canculate distance
-                s = 0.5*G_const*body.mass*t**2/(rel_x**2+rel_y**2)+self.v*t
+                if body.id in self.speed_vectors:
+                    s = 0.5*G_const*body.mass*t**2/(rel_x**2+rel_y**2)+self.speed_vectors[body.id]*t
+                else:
+                    s = 0.5*G_const*body.mass*t**2/(rel_x**2+rel_y**2)+self.v0*t
 
                 #canculate new v
 
-                self.v = G_const*body.mass*t**2/(rel_x**2+rel_y**2)*t
+                self.speed_vectors[body.id] = G_const*body.mass*t**2/(rel_x**2+rel_y**2)*t
 
                 #canculate new posisons
                 if rel_y < 0.0:
@@ -54,7 +58,7 @@ class Body():
                     print("Relative posision:", rel_x,rel_y)
                     print("Angle:", math.degrees(angle))
                     print("Distance:", s)
-                    print("Speed:", self.v)
+                    print("Speed:", self.speed_vectors[body.id])
                     print("New posision:", new_rel_x, new_rel_y)
         if debug :
             print("Canculated posision:", newpos)
