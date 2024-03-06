@@ -6,62 +6,50 @@ import scipy
 
 G_const = scipy.constants.G
 
-debug = False
+debug = True
 
-math.cos
 
 class Body():
-    def __init__(self, id, mass, v0, x, y):
+    def __init__(self, id, mass, vx0, vy0, x, y):
         self.mass = mass
-        self.v0 = v0
+        self.vx = vx0
+        self.vy = vy0
         self.id = id
         self.pos = [x, y]
-        self.speed_vectors = {}
 
-    def canculate(self, bodys, t):
-        newpos = self.pos
-        perbodyV = 0
+    def canculate(self, bodys, dt):
+        
+        temp_sy = 0
+        temp_sx = 0
+
         if debug:
             print("id:",self.id)
+
         for body in bodys:
             if body.id != self.id:
                 #relative cord from body
                 rel_x = body.pos[0]-self.pos[0]
                 rel_y = body.pos[1]-self.pos[1]
-                
-                #canculate angle
-                angle = math.atan2(abs(rel_y),abs(rel_x)) # in radians!!!!
-                
+                # canculate angle
+                angle = math.atan2(rel_y, rel_x)
+                # canculate acceleration
+                ax = (G_const * body.mass * math.cos(angle)) / (rel_x**2+rel_y**2)
+                ay = (G_const * body.mass * math.sin(angle)) / (rel_x**2+rel_y**2)
+
                 #canculate distance
-                if body.id in self.speed_vectors:
-                    s = 0.5*G_const*body.mass*t**2/(rel_x**2+rel_y**2)+self.speed_vectors[body.id]*t
-                else:
-                    s = 0.5*G_const*body.mass*t**2/(rel_x**2+rel_y**2)+self.v0*t
-
+                temp_sx += 0.5*ax*dt**2+self.vx*dt
+                temp_sy += 0.5*ay*dt**2+self.vy*dt
                 #canculate new v
-
-                self.speed_vectors[body.id] = G_const*body.mass*t**2/(rel_x**2+rel_y**2)*t
-
-                #canculate new posisons
-                if rel_y < 0.0:
-                    new_rel_y = -1*(s*math.sin(angle))
-                else:
-                    new_rel_y = s*math.sin(angle)
-                
-                if rel_x < 0.0:
-                    new_rel_x = -1*(s*math.cos(angle))
-                else:
-                    new_rel_x = s*math.cos(angle)
-                newpos[0] += new_rel_x
-                newpos[1] += new_rel_y
+                self.vx += ax*dt
+                self.vy += ay*dt
                 if debug:
-                    print("Relative posision:", rel_x,rel_y)
+                    print("Relative pos:", rel_x,rel_y)
                     print("Angle:", math.degrees(angle))
-                    print("Distance:", s)
-                    print("Speed:", self.speed_vectors[body.id])
-                    print("New posision:", new_rel_x, new_rel_y)
-        if debug :
-            print("Canculated posision:", newpos)
+                    print("ds:", temp_sx, temp_sy)
+                    print("V:", self.vx, self.vy)
+        self.pos[0] += temp_sx
+        self.pos[1] += temp_sy
+
 
 
 
@@ -69,17 +57,15 @@ class Body():
 if __name__ == "__main__":
     debug = True
     bodys = [
-            Body(1, 1000000, 0, 0, 0),
-            Body(2, 1000000, 0, 10, 10),
-            Body(3, 1000000, 0, 15, 5)
+            Body(1, 1000000, 0, 0, 0,  0),
+            Body(2, 1000000, 0, 0, 10, 10),        
             ]
 
     time = 0
     while 1:
         for body in bodys:
-            body.canculate(bodys,1000)
-        time += 1000
-        break
+            body.canculate(bodys,0.1)
+        time += 1
 
 
 
