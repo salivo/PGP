@@ -1,14 +1,19 @@
 
 import pygame
+import threading
+
 
 from canculate import Body
 
+
+
+
+
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 running = True
-
  
 
 x_offset = 640
@@ -16,58 +21,56 @@ y_offset = 360
 
 scroll_senc = 0.5
 zoom = 6   # 50        100       25 
-tpp = 1000  # 0.1        1       0.02
+tpp = 100  # 0.1       1       0.02
 
 
-objects_colors = {1:(255,0,0),
-                  2:(0,0,255),
-                  3:(0,255,0),
+objects_colors = {"slunce":(255,255,0),
+                  "zeme":(0,0,255),
+                  "mars":(255,180,0),
                   4:(255,255,0),
                   5:(255,0,255),
                   6:(0,255,255)}
 
 bodys = [
-        Body(1, 1000000, 0, 0, 0,  0),
-        Body(2, 1000000, 0, 0, 8, 0),
-        Body(3, 1000000, 0, 0, 4, 6.92820323),
+        Body("slunce", 1.989*10**30, 0, 0, 0,  0),
+        Body("zeme", 5.972*10**24, 0, 29783, 147097000000, 0),
+        Body("mars", 6.3*10**23, 0, -24077, -227900000000, 0),
         #Body(4, 100000, 0, 0, 2, 10)
         #Body(4, 1000000, 0, 0, 2, 10),
         ]
-time = 0
 
-pause = False
-
-waitforpause = False
+def calc_thread():
+    global running
+    while running:
+        for body in bodys:
+            body.canculate(bodys,tpp)
+        
+thread = threading.Thread(target=calc_thread)
+thread.start()
 
 
 while running:
     # poll for events
-    object_display_size = 2*zoom
-    m2px = 5*zoom
+    object_display_size = 1*zoom
+    m2px = 0.000000001*zoom
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEWHEEL:
             zoom += event.y*scroll_senc
-            time += event.y*0.5
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                print("pause")
-                #if not waitforpause:
-                 #   pause = !pause
-            if event.key == pygame.K_RIGHT:
-                time += 0
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_SPACE:
-                print("play")
-                pause = False
+        if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+             if event.key == pygame.K_0:
+                x_offset = 640
+                y_offset = 360
+
+    mouse_x, mouse_y = pygame.mouse.get_rel()
+    if pygame.mouse.get_pressed()[0]:
+        x_offset += mouse_x
+        y_offset += mouse_y
     #clear screen
     screen.fill((0,0,0))
     #draw objects
     for body in bodys:
-        if not pause:
-            body.canculate(bodys,10)
-
         pygame.draw.circle(screen,
                          objects_colors[body.id],
                          (body.pos[0]*m2px+x_offset,
@@ -77,9 +80,7 @@ while running:
     #show screen
     pygame.display.flip()
     #add time to next canculation
-    
-
     #wait to stabilizate frame
     clock.tick(24)
-
+thread.join()
 pygame.quit()
