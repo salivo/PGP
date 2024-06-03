@@ -13,6 +13,9 @@ and more...
 - [ ] body finder
 - [ ] Show body parameters
 
+# Used Technologies
+- [OpenGL](https://opengl.org/)
+- [raylib](https://github.com/raysan5/raylib)
 ## About Project
 This Project is in development, and it was planned as School project,
 but now it will participate to "SOČ" (Secondary school special activity) competition.
