@@ -2,11 +2,14 @@
 #include "raylib.h"
 #include "rlgl.h"
 #include "raymath.h"
+#include <string>
+#include "process_bodies.hpp"
 #define RAYGUI_IMPLEMENTATION
-#include "raygui.c"
-#include "process_bodies.cpp"
+#include "raygui.h"
+#include "gui_elements.hpp"
 
-void WorldResizing(Camera2D* camera){
+
+void WorldResizing(Camera2D* camera, Bodies* bodies, std::string body_to_folow){
     if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
         {
             Vector2 delta = GetMouseDelta();
@@ -18,17 +21,22 @@ void WorldResizing(Camera2D* camera){
         if (wheel != 0)
         {
             Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), *camera);
-
-            camera->offset = GetMousePosition();
+            if (body_to_folow == ""){
+                camera->offset = GetMousePosition();
+            }
             camera->target = mouseWorldPos;
             float scaleFactor = 1.0f + (0.25f*fabsf(wheel));
             if (wheel < 0) scaleFactor = 1.0f/scaleFactor;
             camera->zoom = Clamp(camera->zoom*scaleFactor, 0.01f, 100.0f);
         }
+        if (body_to_folow != ""){
+            camera->target = bodies->getBodyByName(body_to_folow)->center;
+            camera->offset = (Vector2){GetMonitorWidth(GetCurrentMonitor()) / 2.0f, GetMonitorHeight(GetCurrentMonitor()) / 2.0f};
+        }
 }
-
 int main ()
 {
+    const std::string body_to_folow = "body2";
     const int WindowWidth = GetMonitorWidth(GetCurrentMonitor());
     const int WindowHeight = GetMonitorHeight(GetCurrentMonitor());
     SetConfigFlags(FLAG_MSAA_4X_HINT);
@@ -47,12 +55,14 @@ int main ()
         if (IsKeyPressed(KEY_F11)){
             ToggleFullscreen();
         }
-        WorldResizing(&camera);
+        
+        WorldResizing(&camera, &bodies, body_to_folow);
         BeginDrawing();
             ClearBackground(BLACK);
             BeginMode2D(camera);
             bodies.drawAll();
             EndMode2D();
+            ShowBodyFinder(&bodies);
         EndDrawing();
     }
     CloseWindow();
