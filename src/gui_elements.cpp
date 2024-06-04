@@ -2,8 +2,10 @@
 #include "process_bodies.hpp"
 
 #include "raygui.h"
+#include <cstddef>
+#include <string>
 
-void ShowBodyFinder(Bodies* bodies){
+std::string ShowBodyFinder(Bodies* bodies){
     static char text[21];
     if (GuiTextBox((Rectangle){ 24, 24, 120, 30 }, text, 20, true)){
     }
@@ -12,9 +14,9 @@ void ShowBodyFinder(Bodies* bodies){
         int clicked = GuiLabelButton({ 24, 54+30*i, 120, 30 }, (char*)name.c_str());
         if (clicked){
             printf("%s clicked!\n", name.c_str());
+            return name;
         }
         i += 1.0f;
     }
-    
-
+    return "";
 }

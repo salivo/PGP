@@ -2,8 +2,9 @@
 #define GUI_ELEMENTS_HPP
 
 #include "process_bodies.hpp"
+#include <string>
 
 void showBodyParameters(Body Body);
-void ShowBodyFinder(Bodies* bodies);
+std::string ShowBodyFinder(Bodies* bodies);
 
 #endif
