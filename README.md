@@ -10,8 +10,9 @@ and more...
 - [X] Make simple phisics canculations
 - [X] Visulizate body
 - [X] Controll world with mouse
-- [ ] body finder
+- [ ] Body finder
 - [ ] Show body parameters
+- [ ] Add gravity processing 
 
 # Used Technologies
 - [OpenGL](https://opengl.org/)
