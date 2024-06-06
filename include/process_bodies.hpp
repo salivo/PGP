@@ -39,6 +39,8 @@ public:
     Body* getBodyByName(const std::string& name);
     void drawAll() const;
     void addImpulseToBody(Body* body, Vector2 impulse);
-    std::vector<std::string> SortedNamesByKeyword(const std::string& keyword);
+    std::vector<std::string> SortedNamesByKeyword(const std::string& query);
+    int getBodyCount(void);
+    std::string getBodyNameByPoint(Vector2 point);
 };
 #endif

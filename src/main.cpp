@@ -3,6 +3,7 @@
 #include "rlgl.h"
 #include "raymath.h"
 #include <cstddef>
+#include <cstdio>
 #include <string>
 #include "process_bodies.hpp"
 #define RAYGUI_IMPLEMENTATION
@@ -40,35 +41,51 @@ void WorldResizing(Camera2D *camera, Bodies *bodies,
 int main ()
 {
   string body_to_folow = "";
+  bool drawBodyFinder = false;
   const int WindowWidth = GetMonitorWidth(GetCurrentMonitor());
   const int WindowHeight = GetMonitorHeight(GetCurrentMonitor());
   SetConfigFlags(FLAG_MSAA_4X_HINT);
   InitWindow(WindowWidth, WindowHeight, "PGP");
+  SetExitKey(KEY_NULL);
   ToggleFullscreen();
   Camera2D camera = {0};
   camera.zoom = 1.0f;
-  SetTargetFPS(60);
+  SetTargetFPS(120);
 
   Bodies bodies;
-  bodies.addBody(Body("body1", {1, 0}, {1, 0}, {0, 0}, 10.0f));
-  bodies.addBody(Body("body2", {0, 100}, {0, 0}, {0, 0}, 10.0f));
+  bodies.addBody(Body("body1", {300, 300}, {1, 0}, {0, 0}, 10.0f));
+  bodies.addBody(Body("body2", {300, 300}, {-0.1, 0}, {0, 0}, 10.0f));
+  bodies.addBody(Body("earth", {300, 300}, {0.1, 0}, {0, 0}, 10.0f));
+  bodies.addBody(Body("moon", {300, 300}, {0, 0.1}, {0, 0}, 10.0f));
+  bodies.addBody(Body("sun", {300, 300}, {0, 0.3}, {0, 0}, 10.0f));
   bodies.addImpulseToBody(bodies.getBodyByName("body1"), {0, 1});
   while (!WindowShouldClose()) {
     if (IsKeyPressed(KEY_F11)) {
       ToggleFullscreen();
     }
-
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_F)) {
+      drawBodyFinder = true;
+    }
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+      Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
+      printf("%s\n",bodies.getBodyNameByPoint(mouseWorldPos).c_str());
+      body_to_folow = bodies.getBodyNameByPoint(mouseWorldPos);
+    }
     WorldResizing(&camera, &bodies, body_to_folow);
     BeginDrawing();
     ClearBackground(BLACK);
     BeginMode2D(camera);
     bodies.drawAll();
     EndMode2D();
-    string choosed_body = ShowBodyFinder(&bodies);
-    if (choosed_body != ""){
-        body_to_folow = choosed_body;
+    if (drawBodyFinder){
+      string choosed_body = ShowBodyFinder(&bodies);
+      if (choosed_body != ""){
+        if (choosed_body != "IWANTJUSTEXITPLEASELEAVEME") {
+          body_to_folow = choosed_body;
+        }
+        drawBodyFinder = false;
+      }
     }
-    
     EndDrawing();
     }
     CloseWindow();

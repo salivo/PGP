@@ -4,6 +4,8 @@
 
 #include <raylib.h>
 #include <raymath.h>
+#include <string>
+#include <vector>
 
 
 Bodies::Bodies() : running(true), updateThread(&Bodies::updateBodies, this) {}
@@ -53,10 +55,26 @@ void Bodies::addImpulseToBody(Body* body, Vector2 impulse) {
     body->velocity = Vector2Add(body->velocity, Vector2Scale(impulse, deltaTimeInSeconds / body->mass));
 }
 
-std::vector<std::string> Bodies::SortedNamesByKeyword(const std::string& keyword) {
-    std::vector<std::string> buffer;
+std::vector<std::string> Bodies::SortedNamesByKeyword(const std::string& query) {
+    std::vector<std::string> filtered_bodies;
     for (auto &body : bodies) {
-        buffer.push_back(body.name);
+        if (body.name.find(query) != std::string::npos) {
+            filtered_bodies.push_back(body.name);
+        }
     }
-    return buffer;
+    return filtered_bodies;
+
+}
+
+int Bodies::getBodyCount(void){
+    return bodies.size();
+}
+
+std::string Bodies::getBodyNameByPoint(Vector2 point){
+    for (auto &body : bodies) {
+        if (CheckCollisionCircles(body.center, 50, point, 4)){
+            return body.name;
+        }
+    }
+    return "";
 }
