@@ -2,7 +2,6 @@
 #include "raylib.h"
 #include "rlgl.h"
 #include "raymath.h"
-#include <cstddef>
 #include <cstdio>
 #include <string>
 #include "process_bodies.hpp"
@@ -34,10 +33,11 @@ void WorldResizing(Camera2D *camera, Bodies *bodies,
   }
   if (body_to_folow != "") {
     camera->target = bodies->getBodyByName(body_to_folow)->center;
-    camera->offset = (Vector2){GetMonitorWidth(GetCurrentMonitor()) / 2.0f,
-                               GetMonitorHeight(GetCurrentMonitor()) / 2.0f};
+    camera->offset = (Vector2){GetRenderWidth() / 2.0f,
+                               GetRenderHeight() / 2.0f};
   }
 }
+
 int main ()
 {
   string body_to_folow = "";
@@ -51,8 +51,10 @@ int main ()
   Camera2D camera = {0};
   camera.zoom = 1.0f;
   SetTargetFPS(120);
+  
 
   Bodies bodies;
+  GuiElements gui_elem;
   bodies.addBody(Body("body1", {300, 300}, {1, 0}, {0, 0}, 10.0f));
   bodies.addBody(Body("body2", {300, 300}, {-0.1, 0}, {0, 0}, 10.0f));
   bodies.addBody(Body("earth", {300, 300}, {0.1, 0}, {0, 0}, 10.0f));
@@ -63,13 +65,18 @@ int main ()
     if (IsKeyPressed(KEY_F11)) {
       ToggleFullscreen();
     }
-    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_F)) {
-      drawBodyFinder = true;
-    }
+    
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
-      printf("%s\n",bodies.getBodyNameByPoint(mouseWorldPos).c_str());
-      body_to_folow = bodies.getBodyNameByPoint(mouseWorldPos);
+      bool can_choose = true;
+      for (const auto& pair : gui_elem.gui_rects) {
+        if (CheckCollisionPointRec(GetMousePosition(), pair.second))
+        can_choose = false;
+      }
+      if (can_choose){
+        printf("%s\n",bodies.getBodyNameByPoint(mouseWorldPos).c_str());
+        body_to_folow = bodies.getBodyNameByPoint(mouseWorldPos);
+      }
     }
     WorldResizing(&camera, &bodies, body_to_folow);
     BeginDrawing();
@@ -77,15 +84,7 @@ int main ()
     BeginMode2D(camera);
     bodies.drawAll();
     EndMode2D();
-    if (drawBodyFinder){
-      string choosed_body = ShowBodyFinder(&bodies);
-      if (choosed_body != ""){
-        if (choosed_body != "IWANTJUSTEXITPLEASELEAVEME") {
-          body_to_folow = choosed_body;
-        }
-        drawBodyFinder = false;
-      }
-    }
+    gui_elem.DrawAll(&bodies, &body_to_folow);
     EndDrawing();
     }
     CloseWindow();
