@@ -1,5 +1,5 @@
 # Phisics Gravity Project
-### Calculate and visualizate N-body problem
+### Calculation and visualization of N-body problem
 and more... 
 ## Features
 - Basic phisics interactions (velocity, acceleration, impluse...)
