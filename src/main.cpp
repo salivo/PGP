@@ -58,7 +58,7 @@ int main ()
   bodies.addBody(Body("body1", {300, 300}, {1, 0}, {0, 0}, 10.0f));
   bodies.addBody(Body("body2", {300, 300}, {-0.1, 0}, {0, 0}, 10.0f));
   bodies.addBody(Body("earth", {300, 300}, {0.1, 0}, {0, 0}, 10.0f));
-  bodies.addBody(Body("moon", {300, 300}, {0, 0.1}, {0, 0}, 10.0f));
+  bodies.addBody(Body("moon", {300, 300}, {0.1, 0.1}, {0, 0}, 10.0f));
   bodies.addBody(Body("sun", {300, 300}, {0, 0.3}, {0, 0}, 10.0f));
   bodies.addImpulseToBody(bodies.getBodyByName("body1"), {0, 1});
   while (!WindowShouldClose()) {
