@@ -51,11 +51,11 @@ int main ()
   Camera2D camera = {0};
   camera.zoom = 1.0f;
   SetTargetFPS(120);
-  
+
 
   Bodies bodies;
   GuiElements gui_elem;
-  bodies.addBody(Body("body1", {300, 300}, {1, 0}, {0, 0}, 10.0f));
+  bodies.addBody(Body("body1", {300, 300}, {-2, 0}, {0.1, 0}, 10.0f));
   bodies.addBody(Body("body2", {300, 300}, {-0.1, 0}, {0, 0}, 10.0f));
   bodies.addBody(Body("earth", {300, 300}, {0.1, 0}, {0, 0}, 10.0f));
   bodies.addBody(Body("moon", {300, 300}, {0.1, 0.1}, {0, 0}, 10.0f));
@@ -65,7 +65,7 @@ int main ()
     if (IsKeyPressed(KEY_F11)) {
       ToggleFullscreen();
     }
-    
+
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
       bool can_choose = true;

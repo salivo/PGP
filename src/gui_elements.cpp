@@ -1,5 +1,3 @@
-#include "gui_elements.hpp"
-#include "process_bodies.hpp"
 
 #include "raygui.h"
 #include <cstdio>
@@ -7,6 +5,10 @@
 #include <raylib.h>
 #include <string>
 #include <vector>
+
+#include "gui_elements.hpp"
+#include "process_bodies.hpp"
+#include "calc_helper.hpp"
 
 using namespace std;
 
@@ -102,29 +104,69 @@ std::string GuiElements::ShowBodyFinder(Bodies* bodies){
     return to_return;
 }
 
-void draw_section(Rectangle params_rect, Vector2 data, string name){
-    DrawText(name.c_str(), params_rect.x+BODY_PARAMS_PADDING,BODY_PARAMS_PADDING,H3_TEXT_SIZE,WHITE);
-    GuiSetStyle(DEFAULT, TEXT_SIZE, H3_TEXT_SIZE);
+void draw_section(Rectangle params_rect, Vector2 data, TwoStrings names, string unit_x, string unit_y=""){
+    static string first_draw_name;
+    static int section_draw_count = 0;
+    if (section_draw_count == 0){
+        first_draw_name = names.s1;
+    }
+    if (first_draw_name == names.s1){
+        section_draw_count = 0;
+    }
+    section_draw_count++;
+    int draw_offset_from_draw_count = section_draw_count*(H3_TEXT_SIZE+BODY_PARAMS_GAP+BODY_PARAMS_SECTION_GAP);
+    if (unit_y==""){
+        unit_y=unit_x;
+    }
     float half_width = (params_rect.width-2*BODY_PARAMS_PADDING)/2.0;
+    DrawText(names.s1.c_str(),
+        params_rect.x+BODY_PARAMS_PADDING,
+        BODY_PARAMS_PADDING+draw_offset_from_draw_count,
+        H3_TEXT_SIZE,
+        WHITE);
+    DrawText(names.s2.c_str(),
+        params_rect.x+BODY_PARAMS_PADDING+half_width,
+        BODY_PARAMS_PADDING+draw_offset_from_draw_count,
+        H3_TEXT_SIZE,
+        WHITE);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, H3_TEXT_SIZE);
+
     GuiLabelButton({
         params_rect.x+BODY_PARAMS_PADDING,
-        params_rect.y+H3_TEXT_SIZE+BODY_PARAMS_GAP,
+        params_rect.y+H3_TEXT_SIZE+BODY_PARAMS_GAP+draw_offset_from_draw_count,
         half_width,
         H6_TEXT_SIZE
-    }, to_string(data.x).c_str());
+    }, formatWithPrefix(data.x, unit_x).c_str());
     GuiLabelButton({
         params_rect.x+half_width+BODY_PARAMS_PADDING,
-        params_rect.y+H3_TEXT_SIZE+BODY_PARAMS_GAP,
+        params_rect.y+H3_TEXT_SIZE+BODY_PARAMS_GAP+draw_offset_from_draw_count,
         half_width,
         H6_TEXT_SIZE
-    }, to_string(data.y).c_str());
+    }, formatWithPrefix(data.y, unit_y).c_str());
+    // TODO: Parameters Change
 }
 
 void GuiElements::ShowBodyParams(Body* Body){
     DrawRectangleRec(params_rect, ELEMENTS_BACKGROUND_COLOR);
     const char buffer_text[21] = "";
     bool editMode = true;
-    draw_section(params_rect, Body->center, "hello");
+    DrawText(Body->name.c_str(),
+        params_rect.x+BODY_PARAMS_PADDING,
+        BODY_PARAMS_PADDING,
+        H2_TEXT_SIZE,
+        WHITE);
+    DrawLineEx({
+        .x = params_rect.x+BODY_PARAMS_PADDING,
+        .y = BODY_PARAMS_PADDING*2+H2_TEXT_SIZE
+    },
+    {
+        .x = params_rect.x+params_rect.width-BODY_PARAMS_PADDING,
+        .y = BODY_PARAMS_PADDING*2+H2_TEXT_SIZE
+    }, 1, WHITE);
+    draw_section(params_rect, Body->center, {"Position"}, "m");
+    draw_section(params_rect, Body->velocity, {"Velocity"}, "m/s");
+    draw_section(params_rect, Body->acceleration, {"Acceleration"}, "m/s^2");
+    draw_section(params_rect, (Vector2){.x = Body->mass*1000, .y = Body->radius}, {"Mass", "Radius"}, "g", "m");
 }
 
 void GuiElements::DrawAll(Bodies* bodies, std::string* body_to_folow){
@@ -138,7 +180,6 @@ void GuiElements::DrawAll(Bodies* bodies, std::string* body_to_folow){
                 (*body_to_folow) = choosed_body;
             }
             gui_rects.erase(FINDER);
-            printf("erased\n");
         }
     }
     if ((*body_to_folow) != ""){

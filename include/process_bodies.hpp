@@ -11,13 +11,13 @@
 #define CALCULATIONS_PER_SECOND 100
 #define DELTA_TIME_IN_SECONDS 1
 
-
 struct Body {
     std::string name;
     Vector2 center;
     Vector2 velocity;
     Vector2 acceleration;
-    Vector2 force;
+    Vector2 force; // I need this?
+    float radius;
     float mass;
     Body(std::string _name, Vector2 _center, Vector2 _velocity, Vector2 _acceleration, float _mass)
         : name(_name), center(_center), velocity(_velocity), acceleration(_acceleration), mass(_mass) {}

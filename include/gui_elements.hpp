@@ -10,12 +10,13 @@
 #define ELEMENTS_ACCENT_COLOR (Color){5, 100, 30, 255}
 #define ELEMENTS_FOCUS_COLOR (Color){40, 122, 62, 255}
 
+#define H2_TEXT_SIZE 30
 #define H3_TEXT_SIZE 24
 #define H6_TEXT_SIZE 16
 
 #define BODY_PARAMS_WIDTH_PERCENT 0.3
 #define BODY_PARAMS_PADDING 16
-
+#define BODY_PARAMS_SECTION_GAP 16
 #define BODY_PARAMS_GAP 26
 
 #define FINDER_MARGIN 20
@@ -26,9 +27,14 @@
 #define FINDER_WIDTH 150
 #define FINDER_ROUNDING 0.05
 
-#define EXIT_WITHOUT_CHOOSING "IWANTJUSTEXITPLEASELEAVEME" // I now that it isn't good solution
+#define EXIT_WITHOUT_CHOOSING "IWANTJUSTEXITPLEASELEAVEME" // I know that it isn't good solution
 
 enum{FINDER,PARAMS};
+
+struct TwoStrings {
+    std::string s1 = "";
+    std::string s2 = "";
+};
 
 class GuiElements{
 private:
