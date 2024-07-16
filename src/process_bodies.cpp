@@ -52,7 +52,7 @@ void Bodies::drawAll() const {
 void Bodies::addImpulseToBody(Body* body, Vector2 impulse) {
     std::lock_guard<std::mutex> lock(bodiesMutex);
     float deltaTimeInSeconds = GetFrameTime();
-    body->velocity = Vector2Add(body->velocity, Vector2Scale(impulse, deltaTimeInSeconds / body->mass));
+    body->velocity = Vector2Add(body->velocity, Vector2Scale(impulse, deltaTimeInSeconds / body->massradius.mass));
 }
 
 std::vector<std::string> Bodies::SortedNamesByKeyword(const std::string& query) {

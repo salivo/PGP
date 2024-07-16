@@ -11,16 +11,25 @@
 #define CALCULATIONS_PER_SECOND 100
 #define DELTA_TIME_IN_SECONDS 1
 
+struct MassRadius : public Vector2 {
+    MassRadius(float m, float r) {
+        mass = m;
+        radius = r;
+    }
+
+    float& mass = x;
+    float& radius = y;
+};
+
 struct Body {
     std::string name;
     Vector2 center;
     Vector2 velocity;
     Vector2 acceleration;
     Vector2 force; // I need this?
-    float radius;
-    float mass;
-    Body(std::string _name, Vector2 _center, Vector2 _velocity, Vector2 _acceleration, float _mass)
-        : name(_name), center(_center), velocity(_velocity), acceleration(_acceleration), mass(_mass) {}
+    MassRadius massradius;
+    Body(std::string _name, Vector2 _center, Vector2 _velocity, Vector2 _acceleration, MassRadius _massradius)
+        : name(_name), center(_center), velocity(_velocity), acceleration(_acceleration), massradius(_massradius) {}
 };
 
 class Bodies {

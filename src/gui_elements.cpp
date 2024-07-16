@@ -1,5 +1,7 @@
 
 #include "raygui.h"
+#include <cmath>
+#include <cstddef>
 #include <cstdio>
 #include <cstring>
 #include <raylib.h>
@@ -12,6 +14,7 @@
 
 using namespace std;
 
+
 GuiElements::GuiElements(){
       GuiSetStyle(DEFAULT, BORDER_COLOR_PRESSED, ColorToInt(ELEMENTS_ACCENT_COLOR));
       GuiSetStyle(DEFAULT, BASE_COLOR_PRESSED, ColorToInt(BLACK));
@@ -19,7 +22,6 @@ GuiElements::GuiElements(){
       GuiSetStyle(DEFAULT, TEXT_COLOR_PRESSED, ColorToInt(ELEMENTS_ACCENT_COLOR));
       GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt(ELEMENTS_FOCUS_COLOR));
 }
-
 
 std::string GuiElements::ShowBodyFinder(Bodies* bodies){
     GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
@@ -103,8 +105,7 @@ std::string GuiElements::ShowBodyFinder(Bodies* bodies){
     }
     return to_return;
 }
-
-void draw_section(Rectangle params_rect, Vector2 data, TwoStrings names, string unit_x, string unit_y=""){
+void GuiElements::draw_section(Vector2 &data, TwoStrings names, TwoStrings units){
     static string first_draw_name;
     static int section_draw_count = 0;
     if (section_draw_count == 0){
@@ -115,8 +116,8 @@ void draw_section(Rectangle params_rect, Vector2 data, TwoStrings names, string 
     }
     section_draw_count++;
     int draw_offset_from_draw_count = section_draw_count*(H3_TEXT_SIZE+BODY_PARAMS_GAP+BODY_PARAMS_SECTION_GAP);
-    if (unit_y==""){
-        unit_y=unit_x;
+    if (units.s2==""){
+        units.s2=units.s1;
     }
     float half_width = (params_rect.width-2*BODY_PARAMS_PADDING)/2.0;
     DrawText(names.s1.c_str(),
@@ -131,19 +132,95 @@ void draw_section(Rectangle params_rect, Vector2 data, TwoStrings names, string 
         WHITE);
     GuiSetStyle(DEFAULT, TEXT_SIZE, H3_TEXT_SIZE);
 
-    GuiLabelButton({
+    bool pressed_x = GuiLabelButton({
         params_rect.x+BODY_PARAMS_PADDING,
         params_rect.y+H3_TEXT_SIZE+BODY_PARAMS_GAP+draw_offset_from_draw_count,
         half_width,
         H6_TEXT_SIZE
-    }, formatWithPrefix(data.x, unit_x).c_str());
-    GuiLabelButton({
+    }, formatWithPrefix(data.x, units.s1).c_str());
+    bool pressed_y = GuiLabelButton({
         params_rect.x+half_width+BODY_PARAMS_PADDING,
         params_rect.y+H3_TEXT_SIZE+BODY_PARAMS_GAP+draw_offset_from_draw_count,
         half_width,
         H6_TEXT_SIZE
-    }, formatWithPrefix(data.y, unit_y).c_str());
-    // TODO: Parameters Change
+    }, formatWithPrefix(data.y, units.s2).c_str());
+    if (names.s2 == ""){
+        names.s2 = names.s1+" Y";
+        names.s1 = names.s1+" X";
+    }
+    if (pressed_x){
+        changervalues.value = &(data.x);
+        changervalues.name = names.s1;
+        changervalues.unit = units.s1;
+    }
+    if (pressed_y){
+        changervalues.value = &(data.y);
+        changervalues.name = names.s2;
+        changervalues.unit = units.s2;
+    }
+}
+
+void GuiElements::ShowParamsChanger(){
+    static char stringvalue[CHANGER_BUFFER] = "@#$%";
+    if (strcmp(stringvalue, "@#$%") == 0){
+        float value = *changervalues.value;
+        char format[CHANGER_BUFFER] = "%.3f";
+        if (value < 0){
+            value = value * (-1);
+            strcpy(format, "-%.3f");
+        }
+        sprintf(stringvalue, format, value);
+    }
+    GuiSetStyle(DEFAULT, TEXT_SIZE, H4_TEXT_SIZE);
+    DrawRectangleRec(changer_rect, ELEMENTS_BACKGROUND_COLOR2);
+    DrawText(changervalues.name.c_str(),
+        changer_rect.x+CHANGER_PADDING,
+        changer_rect.y+CHANGER_PADDING,
+        H2_TEXT_SIZE,
+        WHITE);
+    bool enter = GuiTextBox({
+        changer_rect.x+CHANGER_PADDING,
+        changer_rect.y+CHANGER_PADDING+H3_TEXT_SIZE+CHANGER_GAP,
+        changer_rect.width-2*CHANGER_PADDING,
+        H2_TEXT_SIZE
+
+    }, stringvalue, CHANGER_BUFFER-2, true);
+    bool chanceled = GuiButton({
+        changer_rect.x+CHANGER_PADDING,
+        changer_rect.y+changer_rect.height-CHANGER_BUTTON_HEIGHT-CHANGER_PADDING,
+        (float)(changer_rect.width*0.5-CHANGER_PADDING-CHANGER_GAP*0.5),
+        CHANGER_BUTTON_HEIGHT
+    }, "cancel");
+
+    bool done = GuiButton({
+        (float)(changer_rect.x+changer_rect.width*0.5+CHANGER_GAP*0.5),
+        changer_rect.y+changer_rect.height-CHANGER_BUTTON_HEIGHT-CHANGER_PADDING,
+        (float)(changer_rect.width*0.5-CHANGER_PADDING-CHANGER_GAP*0.5),
+        CHANGER_BUTTON_HEIGHT
+    }, "done");
+    if (done || enter){
+        char *endptr;
+        float newValue = strtof(stringvalue, &endptr);
+        if (*endptr == '\0' && endptr != stringvalue) {
+            *changervalues.value = newValue;
+        }
+        strcpy(stringvalue, "@#$%");
+        changervalues.value = nullptr;
+    }
+    if (chanceled){
+        changervalues.value = nullptr;
+        strcpy(stringvalue, "@#$%");
+    }
+    if (IsKeyPressed(KEY_ESCAPE)){
+        changervalues.value = nullptr;
+        strcpy(stringvalue, "@#$%");
+    }
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        if (!CheckCollisionPointRec(GetMousePosition(), changer_rect)){
+            changervalues.value = nullptr;
+            strcpy(stringvalue, "@#$%");
+        }
+    }
 }
 
 void GuiElements::ShowBodyParams(Body* Body){
@@ -153,7 +230,7 @@ void GuiElements::ShowBodyParams(Body* Body){
     DrawText(Body->name.c_str(),
         params_rect.x+BODY_PARAMS_PADDING,
         BODY_PARAMS_PADDING,
-        H2_TEXT_SIZE,
+        H3_TEXT_SIZE,
         WHITE);
     DrawLineEx({
         .x = params_rect.x+BODY_PARAMS_PADDING,
@@ -163,13 +240,22 @@ void GuiElements::ShowBodyParams(Body* Body){
         .x = params_rect.x+params_rect.width-BODY_PARAMS_PADDING,
         .y = BODY_PARAMS_PADDING*2+H2_TEXT_SIZE
     }, 1, WHITE);
-    draw_section(params_rect, Body->center, {"Position"}, "m");
-    draw_section(params_rect, Body->velocity, {"Velocity"}, "m/s");
-    draw_section(params_rect, Body->acceleration, {"Acceleration"}, "m/s^2");
-    draw_section(params_rect, (Vector2){.x = Body->mass*1000, .y = Body->radius}, {"Mass", "Radius"}, "g", "m");
+    draw_section(Body->center, {"Position"}, {"m"});
+    draw_section(Body->velocity, {"Velocity"}, {"m/s"});
+    draw_section(Body->acceleration, {"Acceleration"}, {"m/s^2"});
+    draw_section(Body->massradius, {"Mass", "Radius"}, {"g", "m"});
 }
 
 void GuiElements::DrawAll(Bodies* bodies, std::string* body_to_folow){
+    if (changervalues.value != nullptr){
+        ShowParamsChanger();
+        gui_rects[CHANGER] = changer_rect;
+    }
+    else{
+        if (gui_rects.find(CHANGER) != gui_rects.end()){
+            gui_rects.erase(CHANGER);
+        }
+    }
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_F)) {
         gui_rects[FINDER] = finder_rect;
     }

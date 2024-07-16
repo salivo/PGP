@@ -55,11 +55,11 @@ int main ()
 
   Bodies bodies;
   GuiElements gui_elem;
-  bodies.addBody(Body("body1", {300, 300}, {-2, 0}, {0.1, 0}, 10.0f));
-  bodies.addBody(Body("body2", {300, 300}, {-0.1, 0}, {0, 0}, 10.0f));
-  bodies.addBody(Body("earth", {300, 300}, {0.1, 0}, {0, 0}, 10.0f));
-  bodies.addBody(Body("moon", {300, 300}, {0.1, 0.1}, {0, 0}, 10.0f));
-  bodies.addBody(Body("sun", {300, 300}, {0, 0.3}, {0, 0}, 10.0f));
+  bodies.addBody(Body("body1", {300, 300}, {-2, 0}, {0.1, 0}, {10000, 30}));
+  bodies.addBody(Body("body2", {300, 300}, {-0.1, 0}, {0, 0}, {10000, 30}));
+  bodies.addBody(Body("earth", {300, 300}, {0.1, 0}, {0, 0}, {10000, 30}));
+  bodies.addBody(Body("moon", {300, 300}, {0.1, 0.1}, {0, 0}, {10000, 30}));
+  bodies.addBody(Body("sun", {300, 300}, {0, 0.3}, {0, 0}, {10, 30}));
   bodies.addImpulseToBody(bodies.getBodyByName("body1"), {0, 1});
   while (!WindowShouldClose()) {
     if (IsKeyPressed(KEY_F11)) {
