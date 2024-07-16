@@ -1,7 +1,6 @@
 
 #include "raygui.h"
 #include <cmath>
-#include <cstddef>
 #include <cstdio>
 #include <cstring>
 #include <raylib.h>
@@ -161,6 +160,8 @@ void GuiElements::draw_section(Vector2 &data, TwoStrings names, TwoStrings units
 }
 
 void GuiElements::ShowParamsChanger(){
+    static int active;
+    static bool editMode = false;
     static char stringvalue[CHANGER_BUFFER] = "@#$%";
     if (strcmp(stringvalue, "@#$%") == 0){
         float value = *changervalues.value;
@@ -172,33 +173,47 @@ void GuiElements::ShowParamsChanger(){
         sprintf(stringvalue, format, value);
     }
     GuiSetStyle(DEFAULT, TEXT_SIZE, H4_TEXT_SIZE);
+    GuiSetStyle(DROPDOWNBOX, ARROW_PADDING, 14);
+
     DrawRectangleRec(changer_rect, ELEMENTS_BACKGROUND_COLOR2);
     DrawText(changervalues.name.c_str(),
         changer_rect.x+CHANGER_PADDING,
         changer_rect.y+CHANGER_PADDING,
         H2_TEXT_SIZE,
         WHITE);
-    bool enter = GuiTextBox({
+    GuiTextBox({
         changer_rect.x+CHANGER_PADDING,
         changer_rect.y+CHANGER_PADDING+H3_TEXT_SIZE+CHANGER_GAP,
-        changer_rect.width-2*CHANGER_PADDING,
+        changer_rect.width-2*CHANGER_PADDING-CHANGER_UNIT_PREFIX_WIDTH-CHANGER_UNIT_WIDTH-2*CHANGER_GAP,
         H2_TEXT_SIZE
-
     }, stringvalue, CHANGER_BUFFER-2, true);
-    bool chanceled = GuiButton({
+    DrawRectangleRec({
+        changer_rect.x+changer_rect.width-CHANGER_PADDING-CHANGER_UNIT_WIDTH,
+        changer_rect.y+CHANGER_PADDING+H3_TEXT_SIZE+CHANGER_GAP,
+        CHANGER_UNIT_WIDTH,
+        H2_TEXT_SIZE
+    }, WHITE);
+    bool canceled = GuiButton({
         changer_rect.x+CHANGER_PADDING,
         changer_rect.y+changer_rect.height-CHANGER_BUTTON_HEIGHT-CHANGER_PADDING,
         (float)(changer_rect.width*0.5-CHANGER_PADDING-CHANGER_GAP*0.5),
         CHANGER_BUTTON_HEIGHT
     }, "cancel");
-
     bool done = GuiButton({
         (float)(changer_rect.x+changer_rect.width*0.5+CHANGER_GAP*0.5),
         changer_rect.y+changer_rect.height-CHANGER_BUTTON_HEIGHT-CHANGER_PADDING,
         (float)(changer_rect.width*0.5-CHANGER_PADDING-CHANGER_GAP*0.5),
         CHANGER_BUTTON_HEIGHT
     }, "done");
-    if (done || enter){
+    bool dropdown = GuiDropdownBox({
+        changer_rect.x+changer_rect.width-CHANGER_PADDING-CHANGER_UNIT_PREFIX_WIDTH-CHANGER_UNIT_WIDTH-CHANGER_GAP,
+        changer_rect.y+CHANGER_PADDING+H3_TEXT_SIZE+CHANGER_GAP,
+        CHANGER_UNIT_PREFIX_WIDTH,
+        H2_TEXT_SIZE
+    }, "k;M;G;T", &active, editMode);
+    if (dropdown) editMode = !editMode;
+    if (editMode) GuiLock(); else GuiUnlock();
+    if (done || IsKeyPressed(KEY_ENTER)){
         char *endptr;
         float newValue = strtof(stringvalue, &endptr);
         if (*endptr == '\0' && endptr != stringvalue) {
@@ -207,7 +222,7 @@ void GuiElements::ShowParamsChanger(){
         strcpy(stringvalue, "@#$%");
         changervalues.value = nullptr;
     }
-    if (chanceled){
+    if (canceled){
         changervalues.value = nullptr;
         strcpy(stringvalue, "@#$%");
     }
