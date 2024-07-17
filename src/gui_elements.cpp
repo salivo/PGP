@@ -161,10 +161,12 @@ void GuiElements::draw_section(Vector2 &data, TwoStrings names, TwoStrings units
 
 void GuiElements::ShowParamsChanger(){
     static int active;
+    int last_active = active;
     static bool editMode = false;
     static char stringvalue[CHANGER_BUFFER] = "@#$%";
     if (strcmp(stringvalue, "@#$%") == 0){
-        float value = *changervalues.value;
+        active = getUnitPrefixByNumber(*changervalues.value).count;
+        float value = *changervalues.value / pow(10.0, getUnitPrefixByNumber(*changervalues.value).exponent);
         char format[CHANGER_BUFFER] = "%.3f";
         if (value < 0){
             value = value * (-1);
@@ -210,9 +212,12 @@ void GuiElements::ShowParamsChanger(){
         changer_rect.y+CHANGER_PADDING+H3_TEXT_SIZE+CHANGER_GAP,
         CHANGER_UNIT_PREFIX_WIDTH,
         H2_TEXT_SIZE
-    }, "k;M;G;T", &active, editMode);
+    }, "-;k;M;G;T;P;E", &active, editMode);
     if (dropdown) editMode = !editMode;
     if (editMode) GuiLock(); else GuiUnlock();
+    if (last_active != active){
+        printf("choosed\n");
+    }
     if (done || IsKeyPressed(KEY_ENTER)){
         char *endptr;
         float newValue = strtof(stringvalue, &endptr);
