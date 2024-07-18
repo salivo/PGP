@@ -8,8 +8,9 @@ struct UnitPrefix {
 };
 
 extern const UnitPrefix prefixes[];
-UnitPrefix getPrefix(char* prefix);
+UnitPrefix getUnitPrefixbByCount(int count);
 UnitPrefix getUnitPrefixByNumber(float number);
+int getPrefixCount();
 std::string formatWithPrefix(float value, const std::string& unit);
 
 #endif

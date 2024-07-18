@@ -1,6 +1,7 @@
 
 #include "raygui.h"
 #include <cmath>
+#include <csignal>
 #include <cstdio>
 #include <cstring>
 #include <raylib.h>
@@ -164,6 +165,7 @@ void GuiElements::ShowParamsChanger(){
     int last_active = active;
     static bool editMode = false;
     static char stringvalue[CHANGER_BUFFER] = "@#$%";
+    bool canchoosebodies = isBodyChoosingEnabled();
     if (strcmp(stringvalue, "@#$%") == 0){
         active = getUnitPrefixByNumber(*changervalues.value).count;
         float value = *changervalues.value / pow(10.0, getUnitPrefixByNumber(*changervalues.value).exponent);
@@ -213,16 +215,20 @@ void GuiElements::ShowParamsChanger(){
         CHANGER_UNIT_PREFIX_WIDTH,
         H2_TEXT_SIZE
     }, "-;k;M;G;T;P;E", &active, editMode);
+    char *endptr;
+    float newValue = strtof(stringvalue, &endptr);
     if (dropdown) editMode = !editMode;
-    if (editMode) GuiLock(); else GuiUnlock();
-    if (last_active != active){
-        printf("choosed\n");
+    if (editMode) {
+        GuiLock();
+        disableBodyChoosing();
+    }
+    else {
+        GuiUnlock();
+        enableBodyChoosing();
     }
     if (done || IsKeyPressed(KEY_ENTER)){
-        char *endptr;
-        float newValue = strtof(stringvalue, &endptr);
         if (*endptr == '\0' && endptr != stringvalue) {
-            *changervalues.value = newValue;
+            *changervalues.value = newValue * pow(10.0, getUnitPrefixbByCount(active).exponent);
         }
         strcpy(stringvalue, "@#$%");
         changervalues.value = nullptr;
@@ -235,11 +241,13 @@ void GuiElements::ShowParamsChanger(){
         changervalues.value = nullptr;
         strcpy(stringvalue, "@#$%");
     }
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        if (!CheckCollisionPointRec(GetMousePosition(), changer_rect)){
-            changervalues.value = nullptr;
-            strcpy(stringvalue, "@#$%");
-        }
+    if (
+        IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
+        !CheckCollisionPointRec(GetMousePosition(), changer_rect) &&
+        canchoosebodies
+    ) {
+        changervalues.value = nullptr;
+        strcpy(stringvalue, "@#$%");
     }
 }
 
@@ -266,33 +274,48 @@ void GuiElements::ShowBodyParams(Body* Body){
     draw_section(Body->massradius, {"Mass", "Radius"}, {"g", "m"});
 }
 
+void GuiElements::disableBodyChoosing(){
+    gui_rects[RECT_ALL] = render_rect;
+}
+
+void GuiElements::enableBodyChoosing(){
+    if (gui_rects.find(RECT_ALL) != gui_rects.end()){
+        gui_rects.erase(RECT_ALL);
+    }
+}
+bool GuiElements::isBodyChoosingEnabled(){
+    if (gui_rects.find(RECT_ALL) != gui_rects.end()){
+        return false;
+    }
+    return true;
+}
 void GuiElements::DrawAll(Bodies* bodies, std::string* body_to_folow){
     if (changervalues.value != nullptr){
         ShowParamsChanger();
-        gui_rects[CHANGER] = changer_rect;
+        gui_rects[RECT_CHANGER] = changer_rect;
     }
     else{
-        if (gui_rects.find(CHANGER) != gui_rects.end()){
-            gui_rects.erase(CHANGER);
+        if (gui_rects.find(RECT_CHANGER) != gui_rects.end()){
+            gui_rects.erase(RECT_CHANGER);
         }
     }
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_F)) {
-        gui_rects[FINDER] = finder_rect;
+        gui_rects[RECT_FINDER] = finder_rect;
     }
-    if (gui_rects.find(FINDER) != gui_rects.end()){
+    if (gui_rects.find(RECT_FINDER) != gui_rects.end()){
         std::string choosed_body = ShowBodyFinder(bodies);
         if (choosed_body != ""){
             if (choosed_body != EXIT_WITHOUT_CHOOSING) {
                 (*body_to_folow) = choosed_body;
             }
-            gui_rects.erase(FINDER);
+            gui_rects.erase(RECT_FINDER);
         }
     }
     if ((*body_to_folow) != ""){
         ShowBodyParams(bodies->getBodyByName(*body_to_folow));
-        gui_rects[PARAMS] = params_rect;
+        gui_rects[RECT_PARAMS] = params_rect;
     }
     else {
-        gui_rects.erase(PARAMS);
+        gui_rects.erase(RECT_PARAMS);
     }
 }

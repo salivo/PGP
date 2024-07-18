@@ -17,7 +17,7 @@
 #define H6_TEXT_SIZE 16
 
 #define CHANGER_WIDTH_PERCENT 0.25
-#define CHANGER_HEIGHT 200
+#define CHANGER_HEIGHT 150
 #define CHANGER_BUTTON_HEIGHT 35
 #define CHANGER_PADDING 12
 #define CHANGER_GAP 14
@@ -40,7 +40,7 @@
 
 #define EXIT_WITHOUT_CHOOSING "IWANTJUSTEXITPLEASELEAVEME" // I know that it isn't good solution
 
-enum{FINDER,PARAMS,CHANGER};
+enum{RECT_FINDER,RECT_PARAMS,RECT_CHANGER,RECT_ALL};
 
 struct TwoStrings {
     std::string s1 = "";
@@ -66,6 +66,7 @@ private:
         static_cast<float>(GetRenderWidth()*CHANGER_WIDTH_PERCENT),
         CHANGER_HEIGHT,
     };
+    Rectangle render_rect = {0, 0, (float)GetRenderWidth(), (float)GetRenderHeight()};
     ChangerValues changervalues;
     void draw_section(Vector2 &data, TwoStrings names, TwoStrings units);
     void ShowBodyParams(Body* Body);
@@ -75,6 +76,9 @@ private:
 public:
     std::map<int, Rectangle> gui_rects;
     void DrawAll(Bodies* bodies, std::string* body_to_folow);
+    void disableBodyChoosing();
+    void enableBodyChoosing();
+    bool isBodyChoosingEnabled();
     GuiElements();
 };
 
