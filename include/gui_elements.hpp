@@ -16,6 +16,9 @@
 #define H4_TEXT_SIZE 20
 #define H6_TEXT_SIZE 16
 
+#define ADDER_RADIUS 30
+#define ADDER_MARGIN 24
+
 #define CHANGER_WIDTH_PERCENT 0.25
 #define CHANGER_HEIGHT 150
 #define CHANGER_BUTTON_HEIGHT 35
@@ -39,7 +42,7 @@
 
 #define EXIT_WITHOUT_CHOOSING "IWANTJUSTEXITPLEASELEAVEME" // I know that it isn't good solution
 
-enum{RECT_FINDER,RECT_PARAMS,RECT_CHANGER,RECT_ALL};
+enum{RECT_FINDER,RECT_PARAMS,RECT_CHANGER,RECT_ALL,RECT_ADDER};
 
 struct TwoStrings {
     std::string s1 = "";
@@ -65,11 +68,18 @@ private:
         static_cast<float>(GetRenderWidth()*CHANGER_WIDTH_PERCENT),
         CHANGER_HEIGHT,
     };
+    Rectangle adder_rect = {
+        ADDER_MARGIN,
+        (float)GetRenderHeight()-ADDER_MARGIN-2*ADDER_RADIUS,
+        2*ADDER_RADIUS,
+        2*ADDER_RADIUS
+    };
     Rectangle render_rect = {0, 0, (float)GetRenderWidth(), (float)GetRenderHeight()};
     ChangerValues changervalues;
     void draw_section(Vector2 &data, TwoStrings names, TwoStrings units);
     void ShowBodyParams(Body* Body);
     void ShowParamsChanger();
+    void ShowBodyAdder(Bodies* bodies);
     std::string ShowBodyFinder(Bodies* bodies);
 
 public:

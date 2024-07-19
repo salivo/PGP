@@ -21,6 +21,7 @@ void GuiElements::ShowParamsChanger(){
     auto doStuffToExit = [&] () { // Yes function in function, but why not? It's my project.
         strcpy(stringvalue, "@#$%");
         changervalues.value = nullptr;
+        editMode = false;
         GuiUnlock();
         enableBodyChoosing();
     };

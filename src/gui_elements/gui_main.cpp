@@ -1,6 +1,7 @@
 #include "raygui.h"
 
 #include "gui_elements.hpp"
+#include <raylib.h>
 
 using namespace std;
 
@@ -10,9 +11,12 @@ GuiElements::GuiElements(){
       GuiSetStyle(DEFAULT, BORDER_WIDTH, 2);
       GuiSetStyle(DEFAULT, TEXT_COLOR_PRESSED, ColorToInt(ELEMENTS_ACCENT_COLOR));
       GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt(ELEMENTS_FOCUS_COLOR));
+      gui_rects[RECT_ADDER] = adder_rect;
 }
 
 void GuiElements::DrawAll(Bodies* bodies, std::string* body_to_folow){
+    DrawRectangleRec(adder_rect, WHITE);
+    ShowBodyAdder(bodies);
     if (changervalues.value != nullptr){
         ShowParamsChanger();
         gui_rects[RECT_CHANGER] = changer_rect;
