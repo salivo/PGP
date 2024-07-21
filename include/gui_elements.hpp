@@ -16,8 +16,11 @@
 #define H4_TEXT_SIZE 20
 #define H6_TEXT_SIZE 16
 
-#define CONTROL_PANEL_RADIUS 30
-#define CONTROL_PANEL_MARGIN 24
+#define CONTROL_PANEL_HEIGHT 60
+#define CONTROL_PANEL_MARGIN 10
+#define CONTROL_PANEL_PADDING 10
+#define CONTROL_PANEL_GAP 15
+#define CONTROL_PANEL_SLIDER_HEIGHT 15
 
 #define CHANGER_WIDTH_PERCENT 0.25
 #define CHANGER_HEIGHT 150
@@ -70,9 +73,9 @@ private:
     };
     Rectangle control_panel_rect = {
         CONTROL_PANEL_MARGIN,
-        (float)GetRenderHeight()-CONTROL_PANEL_MARGIN-2*CONTROL_PANEL_RADIUS,
-        2*CONTROL_PANEL_RADIUS,
-        2*CONTROL_PANEL_RADIUS
+        (float)GetRenderHeight() - CONTROL_PANEL_MARGIN - CONTROL_PANEL_HEIGHT,
+        (float)GetRenderWidth() - 2*CONTROL_PANEL_MARGIN,
+        CONTROL_PANEL_HEIGHT
     };
     Rectangle render_rect = {0, 0, (float)GetRenderWidth(), (float)GetRenderHeight()};
     ChangerValues changervalues;

@@ -7,7 +7,7 @@ add_executable(${PROJECT_NAME}
     src/process_bodies.cpp
     src/calc_helper.cpp
     src/gui_elements/gui_main.cpp
-    src/gui_elements/add_body.cpp
+    src/gui_elements/control_panel.cpp
     src/gui_elements/body_finder.cpp
     src/gui_elements/body_params.cpp
     src/gui_elements/params_changer.cpp
