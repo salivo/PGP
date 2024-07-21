@@ -6,7 +6,7 @@
 
 using namespace std;
 float value = 0;
-void GuiElements::ShowControlPanel(Bodies* bodies){
+void GuiElements::ShowControlPanel(){
     GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
     DrawRectangleRec(control_panel_rect, ELEMENTS_BACKGROUND_COLOR);
     Rectangle playpause_rect = {
@@ -42,6 +42,11 @@ void GuiElements::ShowControlPanel(Bodies* bodies){
     GuiButton(playpause_rect, "#131#");
     GuiSlider(speed_slider, NULL, NULL, &value, 0, 100);
     GuiSlider(samples_slider, NULL, NULL, &value, 0, 100);
-    GuiButton(adder_rect, "+");
+    bool add_btn = GuiButton(adder_rect, "+");
     GuiButton(find_rect, "#42#");
+    if (add_btn){
+        ;
+        Body* added_body = bodies->addBody(Body("NewBody", {0, 0}, {0, 0}, {0, 0}, {0, 0}));
+        *body_to_folow = added_body->name;
+    }
 }

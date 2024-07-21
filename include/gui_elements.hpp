@@ -59,6 +59,8 @@ struct ChangerValues{
 
 class GuiElements{
 private:
+    Bodies* bodies;
+    std::string* body_to_folow;
     Rectangle finder_rect{FINDER_MARGIN, FINDER_MARGIN, FINDER_WIDTH+2*FINDER_PADDING, 0};
     Rectangle params_rect = {
       (float)(GetRenderWidth()-GetRenderWidth()*BODY_PARAMS_WIDTH_PERCENT),
@@ -82,8 +84,8 @@ private:
     void draw_section(Vector2 &data, TwoStrings names, TwoStrings units);
     void ShowBodyParams(Body* Body);
     void ShowParamsChanger();
-    void ShowControlPanel(Bodies* bodies);
-    std::string ShowBodyFinder(Bodies* bodies);
+    void ShowControlPanel();
+    std::string ShowBodyFinder();
 
 public:
     std::map<int, Rectangle> gui_rects;

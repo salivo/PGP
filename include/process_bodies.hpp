@@ -40,11 +40,12 @@ private:
     std::mutex bodiesMutex;
 
     void updateBodies();
+    std::string generateUniqueName(const std::string& baseName);
 
 public:
     Bodies();
     ~Bodies();
-    void addBody(const Body& body);
+    Body* addBody(Body body);
     Body* getBodyByName(const std::string& name);
     void drawAll() const;
     void addImpulseToBody(Body* body, Vector2 impulse);

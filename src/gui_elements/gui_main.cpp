@@ -20,9 +20,11 @@ GuiElements::GuiElements(){
 
 
 
-void GuiElements::DrawAll(Bodies* bodies, std::string* body_to_folow){
+void GuiElements::DrawAll(Bodies* _bodies, std::string* _body_to_folow){
+    bodies = _bodies;
+    body_to_folow = _body_to_folow;
     gui_rects[RECT_CTRL_PANEL] = control_panel_rect;
-    ShowControlPanel(bodies);
+    ShowControlPanel();
     if (changervalues.value != nullptr){
         ShowParamsChanger();
         gui_rects[RECT_CHANGER] = changer_rect;
@@ -36,7 +38,7 @@ void GuiElements::DrawAll(Bodies* bodies, std::string* body_to_folow){
         gui_rects[RECT_FINDER] = finder_rect;
     }
     if (gui_rects.find(RECT_FINDER) != gui_rects.end()){
-        std::string choosed_body = ShowBodyFinder(bodies);
+        std::string choosed_body = ShowBodyFinder();
         if (choosed_body != ""){
             if (choosed_body != EXIT_WITHOUT_CHOOSING) {
                 (*body_to_folow) = choosed_body;

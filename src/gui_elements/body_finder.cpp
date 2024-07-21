@@ -5,7 +5,7 @@
 
 using namespace std;
 
-string GuiElements::ShowBodyFinder(Bodies* bodies){
+string GuiElements::ShowBodyFinder(){
     GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
     static char text[21];
     static char last_text[21];

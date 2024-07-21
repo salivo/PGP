@@ -2,6 +2,7 @@
 #include "process_bodies.hpp"
 
 
+#include <algorithm>
 #include <raylib.h>
 #include <raymath.h>
 #include <string>
@@ -28,13 +29,32 @@ void Bodies::updateBodies() {
     }
 }
 
-void Bodies::addBody(const Body& body) {
-    std::lock_guard<std::mutex> lock(bodiesMutex);
+std::string Bodies::generateUniqueName(const std::string& baseName) {
+    int counter = 1;
+    std::string newName = baseName;
+
+    auto nameExists = [&](const std::string& name) {
+        return std::find_if(bodies.begin(), bodies.end(), [&](const Body& body) {
+            return body.name == name;
+        }) != bodies.end();
+    };
+
+    while (nameExists(newName)) {
+        newName = baseName + "_" + std::to_string(counter);
+        ++counter;
+    }
+
+    return newName;
+}
+
+Body* Bodies::addBody(Body body) {
+    // std::lock_guard<std::mutex> lock(bodiesMutex);
+    body.name = generateUniqueName(body.name);
     bodies.push_back(body);
+    return &bodies.back();
 }
 
 Body* Bodies::getBodyByName(const std::string& name) {
-    // std::lock_guard<std::mutex> lock(bodiesMutex);
     for (auto &body : bodies) {
         if (body.name == name) {
             return &body;
