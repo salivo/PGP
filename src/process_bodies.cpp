@@ -98,3 +98,12 @@ std::string Bodies::getBodyNameByPoint(Vector2 point){
     }
     return "";
 }
+void Bodies::deleteBody(Body* targetBody) {
+    std::lock_guard<std::mutex> lock(bodiesMutex);
+    for (auto it = bodies.begin(); it != bodies.end(); ++it) {
+        if (&(*it) == targetBody) {
+            bodies.erase(it);
+            break;
+        }
+    }
+}

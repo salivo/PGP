@@ -39,14 +39,16 @@ void GuiElements::ShowControlPanel(){
         control_panel_rect.height - 2*CONTROL_PANEL_PADDING,
         control_panel_rect.height - 2*CONTROL_PANEL_PADDING
     };
-    GuiButton(playpause_rect, "#131#");
+    bool playpause_btn = GuiButton(playpause_rect, "#131#");
     GuiSlider(speed_slider, NULL, NULL, &value, 0, 100);
     GuiSlider(samples_slider, NULL, NULL, &value, 0, 100);
     bool add_btn = GuiButton(adder_rect, "+");
-    GuiButton(find_rect, "#42#");
+    bool find_btn = GuiButton(find_rect, "#42#");
     if (add_btn){
-        ;
         Body* added_body = bodies->addBody(Body("NewBody", {0, 0}, {0, 0}, {0, 0}, {0, 0}));
         *body_to_folow = added_body->name;
+    }
+    if (find_btn){
+        gui_rects[RECT_FINDER] = finder_rect;
     }
 }

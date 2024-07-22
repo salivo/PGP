@@ -12,13 +12,13 @@
 #define DELTA_TIME_IN_SECONDS 1
 
 struct MassRadius : public Vector2 {
-    MassRadius(float m, float r) {
-        mass = m;
-        radius = r;
+    MassRadius(float m, float r) : mass(x), radius(y) {
+        x = m;
+        y = r;
     }
 
-    float& mass = x;
-    float& radius = y;
+    float mass;
+    float radius;
 };
 
 struct Body {
@@ -52,5 +52,6 @@ public:
     std::vector<std::string> SortedNamesByKeyword(const std::string& query);
     int getBodyCount(void);
     std::string getBodyNameByPoint(Vector2 point);
+    void deleteBody(Body* targetBody);
 };
 #endif

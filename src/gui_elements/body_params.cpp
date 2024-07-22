@@ -81,4 +81,13 @@ void GuiElements::ShowBodyParams(Body* Body){
     draw_section(Body->velocity, {"Velocity"}, {"m/s"});
     draw_section(Body->acceleration, {"Acceleration"}, {"m/s^2"});
     draw_section(Body->massradius, {"Mass", "Radius"}, {"g", "m"});
+    bool delete_body = GuiButton({
+        params_rect.x + params_rect.width - BODY_PARAMS_DEL_BTN_SIZE - BODY_PARAMS_DEL_BTN_MARGIN,
+        params_rect.y + params_rect.height - BODY_PARAMS_DEL_BTN_SIZE - BODY_PARAMS_DEL_BTN_MARGIN,
+        BODY_PARAMS_DEL_BTN_SIZE,
+        BODY_PARAMS_DEL_BTN_SIZE
+    }, "#143#");
+    if (delete_body){
+        bodies->deleteBody(Body);
+    }
 }
