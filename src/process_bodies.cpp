@@ -20,12 +20,12 @@ Bodies::~Bodies() {
 
 void Bodies::updateBodies() {
     while (running) {
-        std::lock_guard<std::mutex> lock(bodiesMutex);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / CALCULATIONS_PER_SECOND));
+        std::unique_lock<std::mutex> lock(body_mtx, std::try_to_lock);
         for (auto &body : bodies) {
             body.velocity = Vector2Add(body.velocity, Vector2Scale(body.acceleration, DELTA_TIME_IN_SECONDS));
             body.center = Vector2Add(body.center, Vector2Scale(body.velocity, DELTA_TIME_IN_SECONDS));
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / CALCULATIONS_PER_SECOND));
     }
 }
 
@@ -48,7 +48,6 @@ std::string Bodies::generateUniqueName(const std::string& baseName) {
 }
 
 Body* Bodies::addBody(Body body) {
-    // std::lock_guard<std::mutex> lock(bodiesMutex);
     body.name = generateUniqueName(body.name);
     bodies.push_back(body);
     return &bodies.back();
@@ -70,7 +69,6 @@ void Bodies::drawAll() const {
 }
 
 void Bodies::addImpulseToBody(Body* body, Vector2 impulse) {
-    std::lock_guard<std::mutex> lock(bodiesMutex);
     float deltaTimeInSeconds = GetFrameTime();
     body->velocity = Vector2Add(body->velocity, Vector2Scale(impulse, deltaTimeInSeconds / body->massradius.mass));
 }
@@ -99,7 +97,7 @@ std::string Bodies::getBodyNameByPoint(Vector2 point){
     return "";
 }
 void Bodies::deleteBody(Body* targetBody) {
-    std::lock_guard<std::mutex> lock(bodiesMutex);
+    std::lock_guard<std::mutex> lock(body_mtx);
     for (auto it = bodies.begin(); it != bodies.end(); ++it) {
         if (&(*it) == targetBody) {
             bodies.erase(it);

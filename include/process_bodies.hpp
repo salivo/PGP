@@ -36,9 +36,8 @@ class Bodies {
 private:
     std::vector<Body> bodies;
     std::thread updateThread;
+    std::mutex body_mtx;
     bool running;
-    std::mutex bodiesMutex;
-
     void updateBodies();
     std::string generateUniqueName(const std::string& baseName);
 
