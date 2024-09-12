@@ -1,15 +1,15 @@
-# Phisics Gravity Project
+# Physics Gravity Project
 ### Calculation and visualization of N-body problem
 and more... 
 ## Features
-- Basic phisics interactions (velocity, acceleration, impluse...)
+- Basic physics interactions (velocity, acceleration, impulse...)
 - Gravity Simulation
 - Follow separate body
   
 ## TODO:
-- [X] Make simple phisics canculations
+- [X] Make simple physics canculations
 - [X] Visulizate body
-- [X] Controll world with mouse
+- [X] Control world with mouse
 - [X] Body finder
 - [ ] Show body parameters
 - [ ] Add gravity processing 

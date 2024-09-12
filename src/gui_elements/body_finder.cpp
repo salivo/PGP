@@ -75,7 +75,7 @@ string GuiElements::ShowBodyFinder(){
             DrawRectangleLinesEx(rect, 2,ELEMENTS_ACCENT_COLOR);
         }
         rect.x += (float)FINDER_TEXT_PADDING/2;
-        rect.width -= (float)FINDER_TEXT_PADDING/2; // pading for text
+        rect.width -= (float)FINDER_TEXT_PADDING/2; // padding for text
 
         int clicked = GuiLabelButton(rect,(char*)name.c_str());
         if (clicked){

@@ -4,15 +4,14 @@
 #include "raymath.h"
 #include <cstdio>
 #include <string>
-#include "process_bodies.hpp"
+#include "bodies.hpp"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 #include "gui_elements.hpp"
 
 using std::string;
-
 void WorldResizing(Camera2D *camera, Bodies *bodies,
-                   std::string body_to_folow) {
+                   std::string body_to_follow) {
   if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
     Vector2 delta = GetMouseDelta();
     delta = Vector2Scale(delta, -1.0f / camera->zoom);
@@ -22,7 +21,7 @@ void WorldResizing(Camera2D *camera, Bodies *bodies,
   float wheel = GetMouseWheelMove();
   if (wheel != 0) {
     Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), *camera);
-    if (body_to_folow == "") {
+    if (body_to_follow == "") {
       camera->offset = GetMousePosition();
     }
     camera->target = mouseWorldPos;
@@ -31,8 +30,8 @@ void WorldResizing(Camera2D *camera, Bodies *bodies,
       scaleFactor = 1.0f / scaleFactor;
     camera->zoom = Clamp(camera->zoom * scaleFactor, 0.01f, 100.0f);
   }
-  if (body_to_folow != "") {
-    camera->target = bodies->getBodyByName(body_to_folow)->center;
+  if (body_to_follow != "") {
+    camera->target = bodies->getBodyByName(body_to_follow)->center;
     camera->offset = (Vector2){GetRenderWidth() / 2.0f,
                                GetRenderHeight() / 2.0f};
   }
@@ -40,7 +39,7 @@ void WorldResizing(Camera2D *camera, Bodies *bodies,
 
 int main ()
 {
-  string body_to_folow = "";
+  string body_to_follow = "";
   bool drawBodyFinder = false;
   const int WindowWidth = GetMonitorWidth(GetCurrentMonitor());
   const int WindowHeight = GetMonitorHeight(GetCurrentMonitor());
@@ -55,12 +54,6 @@ int main ()
 
   Bodies bodies;
   GuiElements gui_elem;
-  bodies.addBody(Body("body1", {300, 300}, {-2, 0}, {0.1, 0}, {10000, 30}));
-  bodies.addBody(Body("body2", {300, 300}, {-0.1, 0}, {0, 0}, {10000, 30}));
-  bodies.addBody(Body("earth", {300, 300}, {0.1, 0}, {0, 0}, {10000, 30}));
-  bodies.addBody(Body("moon", {300, 300}, {0.1, 0.1}, {0, 0}, {10000, 30}));
-  bodies.addBody(Body("sun", {300, 300}, {0, 0.3}, {0, 0}, {10, 30}));
-  bodies.addImpulseToBody(bodies.getBodyByName("body1"), {0, 1});
   while (!WindowShouldClose()) {
     if (IsKeyPressed(KEY_F11)) {
       ToggleFullscreen();
@@ -75,16 +68,16 @@ int main ()
       }
       if (can_choose){
         printf("%s\n",bodies.getBodyNameByPoint(mouseWorldPos).c_str());
-        body_to_folow = bodies.getBodyNameByPoint(mouseWorldPos);
+        body_to_follow = bodies.getBodyNameByPoint(mouseWorldPos);
       }
     }
-    WorldResizing(&camera, &bodies, body_to_folow);
+    WorldResizing(&camera, &bodies, body_to_follow);
     BeginDrawing();
     ClearBackground(BLACK);
     BeginMode2D(camera);
     bodies.drawAll();
     EndMode2D();
-    gui_elem.DrawAll(&bodies, &body_to_folow);
+    gui_elem.DrawAll(&bodies, &body_to_follow);
     EndDrawing();
     }
     CloseWindow();

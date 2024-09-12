@@ -1,7 +1,7 @@
 #ifndef GUI_ELEMENTS_HPP
 #define GUI_ELEMENTS_HPP
 
-#include "process_bodies.hpp"
+#include "bodies.hpp"
 #include <raylib.h>
 #include <string>
 #include <map>
@@ -62,7 +62,7 @@ struct ChangerValues{
 class GuiElements{
 private:
     Bodies* bodies;
-    std::string* body_to_folow;
+    std::string* body_to_follow;
     Rectangle finder_rect{FINDER_MARGIN, FINDER_MARGIN, FINDER_WIDTH+2*FINDER_PADDING, 0};
     Rectangle params_rect = {
       (float)(GetRenderWidth()-GetRenderWidth()*BODY_PARAMS_WIDTH_PERCENT),
@@ -91,7 +91,7 @@ private:
 
 public:
     std::map<int, Rectangle> gui_rects;
-    void DrawAll(Bodies* bodies, std::string* body_to_folow);
+    void DrawAll(Bodies* bodies, std::string* body_to_follow);
     void disableBodyChoosing();
     void enableBodyChoosing();
     bool isBodyChoosingEnabled();

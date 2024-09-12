@@ -1,5 +1,5 @@
 
-#include "process_bodies.hpp"
+#include "bodies.hpp"
 
 
 #include <algorithm>
@@ -8,26 +8,6 @@
 #include <string>
 #include <vector>
 
-
-Bodies::Bodies() : running(true), updateThread(&Bodies::updateBodies, this) {}
-
-Bodies::~Bodies() {
-    running = false;
-    if (updateThread.joinable()) {
-        updateThread.join();
-    }
-}
-
-void Bodies::updateBodies() {
-    while (running) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / CALCULATIONS_PER_SECOND));
-        std::unique_lock<std::mutex> lock(body_mtx, std::try_to_lock);
-        for (auto &body : bodies) {
-            body.velocity = Vector2Add(body.velocity, Vector2Scale(body.acceleration, DELTA_TIME_IN_SECONDS));
-            body.center = Vector2Add(body.center, Vector2Scale(body.velocity, DELTA_TIME_IN_SECONDS));
-        }
-    }
-}
 
 std::string Bodies::generateUniqueName(const std::string& baseName) {
     int counter = 1;
@@ -68,6 +48,14 @@ void Bodies::drawAll() const {
     }
 }
 
+void Bodies::CanculatePhysics(int delta){
+    for (auto &body : bodies) {
+        body.velocity = Vector2Add(body.velocity, Vector2Scale(body.acceleration, delta));
+        body.center = Vector2Add(body.center, Vector2Scale(body.velocity, delta));
+    }
+}
+
+
 void Bodies::addImpulseToBody(Body* body, Vector2 impulse) {
     float deltaTimeInSeconds = GetFrameTime();
     body->velocity = Vector2Add(body->velocity, Vector2Scale(impulse, deltaTimeInSeconds / body->massradius.mass));
@@ -97,7 +85,6 @@ std::string Bodies::getBodyNameByPoint(Vector2 point){
     return "";
 }
 void Bodies::deleteBody(Body* targetBody) {
-    std::lock_guard<std::mutex> lock(body_mtx);
     for (auto it = bodies.begin(); it != bodies.end(); ++it) {
         if (&(*it) == targetBody) {
             bodies.erase(it);

@@ -45,8 +45,7 @@ void GuiElements::ShowControlPanel(){
     bool add_btn = GuiButton(adder_rect, "+");
     bool find_btn = GuiButton(find_rect, "#42#");
     if (add_btn){
-        Body* added_body = bodies->addBody(Body("NewBody", {0, 0}, {0, 0}, {0, 0}, {0, 0}));
-        *body_to_folow = added_body->name;
+        // TODO: add body
     }
     if (find_btn){
         gui_rects[RECT_FINDER] = finder_rect;

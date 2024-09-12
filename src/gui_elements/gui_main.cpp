@@ -20,9 +20,9 @@ GuiElements::GuiElements(){
 
 
 
-void GuiElements::DrawAll(Bodies* _bodies, std::string* _body_to_folow){
+void GuiElements::DrawAll(Bodies* _bodies, std::string* _body_to_follow){
     bodies = _bodies;
-    body_to_folow = _body_to_folow;
+    body_to_follow = _body_to_follow;
     gui_rects[RECT_CTRL_PANEL] = control_panel_rect;
     ShowControlPanel();
     if (changervalues.value != nullptr){
@@ -38,16 +38,16 @@ void GuiElements::DrawAll(Bodies* _bodies, std::string* _body_to_folow){
         gui_rects[RECT_FINDER] = finder_rect;
     }
     if (gui_rects.find(RECT_FINDER) != gui_rects.end()){
-        std::string choosed_body = ShowBodyFinder();
-        if (choosed_body != ""){
-            if (choosed_body != EXIT_WITHOUT_CHOOSING) {
-                (*body_to_folow) = choosed_body;
+        std::string chosen_body = ShowBodyFinder();
+        if (chosen_body != ""){
+            if (chosen_body != EXIT_WITHOUT_CHOOSING) {
+                (*body_to_follow) = chosen_body;
             }
             gui_rects.erase(RECT_FINDER);
         }
     }
-    if ((*body_to_folow) != ""){
-        ShowBodyParams(bodies->getBodyByName(*body_to_folow));
+    if ((*body_to_follow) != ""){
+        ShowBodyParams(bodies->getBodyByName(*body_to_follow));
         gui_rects[RECT_PARAMS] = params_rect;
         control_panel_rect.width = GetRenderWidth() - params_rect.width - 2*CONTROL_PANEL_MARGIN;
     }
