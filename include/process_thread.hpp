@@ -1,6 +1,7 @@
 #ifndef PROCESS_BODIES_HPP
 #define PROCESS_BODIES_HPP
 
+#include <optional>
 #include <queue>
 #include <raylib.h>
 #include <thread>
@@ -19,23 +20,19 @@ enum Actions{
 
 struct Command{
     Actions action;
-    string subject;
+    Body subject;
     string parameter;
-    Command(Actions _action, string _subject, string _parameter):
+    Command(Actions _action, Body _subject, string _parameter):
         action(_action), subject(_subject), parameter(_parameter) {}
 };
 
-enum CommandErrors{
-
-};
 
 class CommandQueue{
 private:
     queue<Command> commands;
-    void remove(Command command);
 public:
     void add(Command command);
-    Command get();
+    optional<Command> get();
 };
 
 

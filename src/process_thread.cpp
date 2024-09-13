@@ -1,14 +1,20 @@
 
 #include "process_thread.hpp"
-#include <cstddef>
+#include <optional>
 
 using namespace std;
 
 void CommandQueue::add(Command command){
     commands.push(command);
 }
-Command CommandQueue::get(){
-    return Command(ADD_BODY, "", "");
+
+optional<Command> CommandQueue::get(){
+    if (!commands.empty()) {
+        Command cmd = commands.front();
+        commands.pop();
+        return cmd;
+    }
+    return std::nullopt;
 };
 
 

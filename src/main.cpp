@@ -4,11 +4,11 @@
 #include "raymath.h"
 #include <cstdio>
 #include <string>
-#include "bodies.hpp"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
-#include "gui_elements.hpp"
 
+#include "gui_elements.hpp"
+#include "bodies.hpp"
 using std::string;
 void WorldResizing(Camera2D *camera, Bodies *bodies,
                    std::string body_to_follow) {
