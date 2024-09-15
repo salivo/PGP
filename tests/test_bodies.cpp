@@ -1,4 +1,5 @@
 #include "test_bodies.hpp"
+#include <raylib.h>
 
 int Vector2Equals2Vector(Vector2 vector_a, Vector2 vector_b){
     if (vector_a.x != vector_b.x){
@@ -22,21 +23,70 @@ int BodyEquals2Body(Body body_a, Body body_b){
 }
 
 
-int Test_Bodies::all(){
-    if(addBody_getBody()) return 1;
-    if(Check_canculatePhysics()) return 1;
-    if(checkDelta()) return 1;
+int Test_Bodies::check_all(){
+    if(!check_BodyAccessibleAfterAdd()) return 1;
+    if(!check_RandomNamesWorks()) return 1;
+    if(check_BodyCount()) return 1;
+    if(check_RemoveBody()) return 1;
+    if(check_canculatePhysics()) return 1;
+    if(check_Delta()) return 1;
+    if(check_AddImpulse()) return 1;
     return 0;
 }
 
-int Test_Bodies::addBody_getBody(){
-    if(!isBodyAccessibleAfterAdd()) return 1;
-    if(!isRandomNamesWorks()) return 1;
-    if(!isDefaultName()) return 1;
-    return 0;
-};
 
-int Test_Bodies::Check_canculatePhysics(){
+
+
+
+int Test_Bodies::check_BodyAccessibleAfterAdd(){
+    Bodies bodies;
+    bodies.addBody(test_body);
+    if (bodies.getBodyByName(test_body.name) == nullptr){
+        return 0;
+    }
+    return 1;
+}
+
+int Test_Bodies::check_RandomNamesWorks(){
+    Bodies bodies;
+    bodies.addBody(test_body);
+    bodies.addBody(test_body);
+    if (bodies.getBodyByName(test_body.name + "_1") == nullptr){
+        return 0;
+    }
+    return 1;
+}
+
+int Test_Bodies::check_DefaultName(){
+    Bodies bodies;
+    Body* created_body = bodies.addBody(test_body_empty_name);
+    if (created_body->name == ""){
+        return 0;
+    }
+    return 1;
+}
+
+int Test_Bodies::check_BodyCount(){
+    Bodies b;
+    for (int i=0; i<BODY_TEST_COUNT; i++){
+        b.addBody(test_body_empty_name);
+    }
+    if (b.getBodyCount() != BODY_TEST_COUNT) return 1;
+    return 0;
+}
+
+int Test_Bodies::check_RemoveBody(){
+    Bodies b;
+    for (int i=0; i<BODY_TEST_COUNT; i++){
+        b.addBody(test_body_empty_name);
+    }
+    Body* bodytodelete = b.addBody(test_body_empty_name);
+    b.deleteBody(bodytodelete);
+    if (b.getBodyCount() != BODY_TEST_COUNT) return 1;
+    return 0;
+}
+
+int Test_Bodies::check_canculatePhysics(){
     Bodies bodies;
     Body* body =  bodies.addBody(test_body);
     bodies.setDelta(10);
@@ -50,14 +100,7 @@ int Test_Bodies::Check_canculatePhysics(){
     return 0;
 }
 
-int Test_Bodies::Check_addImpulseToBody(){
-    Bodies bodies;
-    Body* body =  bodies.addBody(test_body);
-
-    return 0;
-}
-
-int Test_Bodies::checkDelta(){
+int Test_Bodies::check_Delta(){
     Bodies b;
     b.setDelta(-1.0);
     if ( b.getDelta() < 0) return 1;
@@ -66,30 +109,11 @@ int Test_Bodies::checkDelta(){
     return 0;
 }
 
-int Test_Bodies::isBodyAccessibleAfterAdd(){
-    Bodies bodies;
-    bodies.addBody(test_body);
-    if (bodies.getBodyByName(test_body.name) == nullptr){
-        return 0;
-    }
-    return 1;
-}
-
-int Test_Bodies::isRandomNamesWorks(){
-    Bodies bodies;
-    bodies.addBody(test_body);
-    bodies.addBody(test_body);
-    if (bodies.getBodyByName(test_body.name + "_1") == nullptr){
-        return 0;
-    }
-    return 1;
-}
-
-int Test_Bodies::isDefaultName(){
-    Bodies bodies;
-    Body* created_body = bodies.addBody(test_body_empty_name);
-    if (created_body->name == ""){
-        return 0;
-    }
-    return 1;
+int Test_Bodies::check_AddImpulse(){
+    Bodies b;
+    Body* body =  b.addBody(test_body);
+    b.setDelta(10.0);
+    b.addImpulseToBody(body, {0, 1});
+    if(!Vector2Equals2Vector(body->velocity, {2,1})) return 1;
+    return 0;
 }

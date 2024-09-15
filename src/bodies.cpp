@@ -83,9 +83,9 @@ int Bodies::getBodyCount(void){
     return bodies.size();
 }
 
-string Bodies::getBodyNameByPoint(Vector2 point){
+string Bodies::getBodyNameByPoint(Vector2 point){ // add tolerance parameter or idk
     for (auto &body : bodies) {
-        if (CheckCollisionCircles(body.center, 50, point, 4)){
+        if (CheckCollisionCircles(body.center, 50, point, 4)){  //TODO: that's smells dirty
             return body.name;
         }
     }

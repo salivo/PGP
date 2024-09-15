@@ -15,15 +15,17 @@ const Body test_body_empty_name = Body("", test_body_center, test_body_velocity,
 
 class Test_Bodies: public Bodies {
 private:
-    int isBodyAccessibleAfterAdd();
-    int isRandomNamesWorks();
-    int isDefaultName();
+    int check_BodyAccessibleAfterAdd();
+    int check_RandomNamesWorks();
+    int check_DefaultName();
+    int check_BodyCount();
+    int check_RemoveBody();
+    int check_canculatePhysics();
+    int check_Delta();
+    int check_AddImpulse();
 public:
-    int all();
-    int addBody_getBody();
-    int Check_canculatePhysics();
-    int Check_addImpulseToBody();
-    int checkDelta();
+    int check_all();
+
 };
 
 #endif
