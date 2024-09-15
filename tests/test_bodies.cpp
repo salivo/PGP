@@ -24,15 +24,47 @@ int BodyEquals2Body(Body body_a, Body body_b){
 
 int Test_Bodies::all(){
     if(addBody_getBody()) return 1;
+    if(Check_canculatePhysics()) return 1;
+    if(checkDelta()) return 1;
     return 0;
 }
 
 int Test_Bodies::addBody_getBody(){
     if(!isBodyAccessibleAfterAdd()) return 1;
     if(!isRandomNamesWorks()) return 1;
-    if(!checkForDefaultName()) return 1;
+    if(!isDefaultName()) return 1;
     return 0;
 };
+
+int Test_Bodies::Check_canculatePhysics(){
+    Bodies bodies;
+    Body* body =  bodies.addBody(test_body);
+    bodies.setDelta(10);
+    CanculatePhysics();
+    if (Vector2Equals2Vector(body->velocity, {2, 10}) == 0){
+        return 1;
+    }
+    if (Vector2Equals2Vector(body->center, {30, 120}) == 0){
+        return 1;
+    }
+    return 0;
+}
+
+int Test_Bodies::Check_addImpulseToBody(){
+    Bodies bodies;
+    Body* body =  bodies.addBody(test_body);
+
+    return 0;
+}
+
+int Test_Bodies::checkDelta(){
+    Bodies b;
+    b.setDelta(-1.0);
+    if ( b.getDelta() < 0) return 1;
+    b.setDelta(10.0);
+    if (b.getDelta() != 10.0) return 1;
+    return 0;
+}
 
 int Test_Bodies::isBodyAccessibleAfterAdd(){
     Bodies bodies;
@@ -53,7 +85,7 @@ int Test_Bodies::isRandomNamesWorks(){
     return 1;
 }
 
-int Test_Bodies::checkForDefaultName(){
+int Test_Bodies::isDefaultName(){
     Bodies bodies;
     Body* created_body = bodies.addBody(test_body_empty_name);
     if (created_body->name == ""){

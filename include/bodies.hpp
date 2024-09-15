@@ -9,6 +9,7 @@
 using namespace std;
 
 #define DEFAULT_NAME "NewBody"
+#define DEFAULT_DELTA 1.0f
 
 struct MassRadius : public Vector2 {
     MassRadius(float m, float r) : mass(x), radius(y) {
@@ -38,10 +39,13 @@ private:
     vector<Body> bodies;
     string generateUniqueName(const string& baseName);
     string defaultNameforEmpty(const string& baseName);
+    float delta = DEFAULT_DELTA;
 protected:
-    void CanculatePhysics(int delta);
+    void CanculatePhysics();
     Body* addBody(Body body);
     void addImpulseToBody(Body* body, Vector2 impulse);
+    void setDelta(float delta);
+    float getDelta();
 public:
     Body* getBodyByName(const string& name);
     void drawAll() const;

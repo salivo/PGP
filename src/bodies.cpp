@@ -1,5 +1,6 @@
 
 #include <algorithm>
+#include <iostream>
 #include <raylib.h>
 #include <raymath.h>
 #include <string>
@@ -51,10 +52,11 @@ Body* Bodies::getBodyByName(const string& name) {
 void Bodies::drawAll() const {
     for (const auto& body : bodies) {
         DrawCircleV(body.center, 50, MAROON);
+        // TODO: Normal drawings
     }
 }
 
-void Bodies::CanculatePhysics(int delta){
+void Bodies::CanculatePhysics(){
     for (auto &body : bodies) {
         body.velocity = Vector2Add(body.velocity, Vector2Scale(body.acceleration, delta));
         body.center = Vector2Add(body.center, Vector2Scale(body.velocity, delta));
@@ -63,8 +65,7 @@ void Bodies::CanculatePhysics(int delta){
 
 
 void Bodies::addImpulseToBody(Body* body, Vector2 impulse) {
-    float deltaTimeInSeconds = GetFrameTime();
-    body->velocity = Vector2Add(body->velocity, Vector2Scale(impulse, deltaTimeInSeconds / body->massradius.mass));
+    body->velocity = Vector2Add(body->velocity, Vector2Scale(impulse, delta / body->massradius.mass));
 }
 
 vector<string> Bodies::SortedNamesByKeyword(const string& query) {
@@ -97,4 +98,16 @@ void Bodies::deleteBody(Body* targetBody) {
             break;
         }
     }
+}
+
+void Bodies::setDelta(float delta){
+    if (delta < 0){
+        cerr << "Delta can't be smaller than zero" << endl;
+        return;
+    }
+    Bodies::delta = delta;
+}
+
+float Bodies::getDelta(){
+    return delta;
 }

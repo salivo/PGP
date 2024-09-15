@@ -23,7 +23,7 @@ optional<Command> CommandQueue::get(){
 void ProcessBodies::threadloop(){
     while (true){
         this_thread::sleep_for(chrono::milliseconds(1000 / CALCULATIONS_PER_SECOND));
-        CanculatePhysics(DELTA_TIME_IN_SECONDS);
+        CanculatePhysics();
     }
 }
 

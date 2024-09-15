@@ -9,7 +9,6 @@
 #include "bodies.hpp"
 
 #define CALCULATIONS_PER_SECOND 100
-#define DELTA_TIME_IN_SECONDS 1
 
 using namespace std;
 
