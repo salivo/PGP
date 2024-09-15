@@ -1,6 +1,8 @@
 
 #include "process_thread.hpp"
 #include <optional>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -26,5 +28,4 @@ void ProcessBodies::threadloop(){
 }
 
 void ProcessBodies::start(){
-    running = true;
 }

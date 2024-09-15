@@ -1,4 +1,4 @@
-#include "bodies.hpp"
+#include "test_bodies.hpp"
 
 int Vector2Equals2Vector(Vector2 vector_a, Vector2 vector_b){
     if (vector_a.x != vector_b.x){
@@ -21,9 +21,43 @@ int BodyEquals2Body(Body body_a, Body body_b){
     return 0;
 }
 
-string test_body_name = "test name";
-Vector2 test_body_center = {10,20};
-Vector2 test_body_velocity = {2,0};
-Vector2 test_body_acceleration = {0,0};
-MassRadius test_body_massradius = {10, 5};
-Body test_body = Body(test_body_name, test_body_center, test_body_velocity, test_body_acceleration, test_body_massradius);
+
+int Test_Bodies::all(){
+    if(addBody_getBody()) return 1;
+    return 0;
+}
+
+int Test_Bodies::addBody_getBody(){
+    if(!isBodyAccessibleAfterAdd()) return 1;
+    if(!isRandomNamesWorks()) return 1;
+    if(!checkForDefaultName()) return 1;
+    return 0;
+};
+
+int Test_Bodies::isBodyAccessibleAfterAdd(){
+    Bodies bodies;
+    bodies.addBody(test_body);
+    if (bodies.getBodyByName(test_body.name) == nullptr){
+        return 0;
+    }
+    return 1;
+}
+
+int Test_Bodies::isRandomNamesWorks(){
+    Bodies bodies;
+    bodies.addBody(test_body);
+    bodies.addBody(test_body);
+    if (bodies.getBodyByName(test_body.name + "_1") == nullptr){
+        return 0;
+    }
+    return 1;
+}
+
+int Test_Bodies::checkForDefaultName(){
+    Bodies bodies;
+    Body* created_body = bodies.addBody(test_body_empty_name);
+    if (created_body->name == ""){
+        return 0;
+    }
+    return 1;
+}

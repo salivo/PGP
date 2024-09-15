@@ -8,6 +8,7 @@
 
 using namespace std;
 
+#define DEFAULT_NAME "NewBody"
 
 struct MassRadius : public Vector2 {
     MassRadius(float m, float r) : mass(x), radius(y) {
@@ -36,6 +37,7 @@ class Bodies {
 private:
     vector<Body> bodies;
     string generateUniqueName(const string& baseName);
+    string defaultNameforEmpty(const string& baseName);
 protected:
     void CanculatePhysics(int delta);
     Body* addBody(Body body);
@@ -47,5 +49,7 @@ public:
     int getBodyCount(void);
     string getBodyNameByPoint(Vector2 point);
     void deleteBody(Body* targetBody);
+
+    friend class Test_Bodies;
 };
 #endif

@@ -1,39 +1,45 @@
 
-#include "bodies.hpp"
-
-
 #include <algorithm>
 #include <raylib.h>
 #include <raymath.h>
 #include <string>
 #include <vector>
 
+#include "bodies.hpp"
 
-std::string Bodies::generateUniqueName(const std::string& baseName) {
+string Bodies::generateUniqueName(const string& baseName) {
     int counter = 1;
-    std::string newName = baseName;
+    string newName = baseName;
 
-    auto nameExists = [&](const std::string& name) {
-        return std::find_if(bodies.begin(), bodies.end(), [&](const Body& body) {
+    auto nameExists = [&](const string& name) {
+        return find_if(bodies.begin(), bodies.end(), [&](const Body& body) {
             return body.name == name;
         }) != bodies.end();
     };
 
     while (nameExists(newName)) {
-        newName = baseName + "_" + std::to_string(counter);
+        newName = baseName + "_" + to_string(counter);
         ++counter;
     }
 
     return newName;
 }
 
+string Bodies::defaultNameforEmpty(const string& baseName){
+    if (baseName == ""){
+        return DEFAULT_NAME;
+    }
+    return baseName;
+}
+
 Body* Bodies::addBody(Body body) {
+    body.name = defaultNameforEmpty(body.name);
     body.name = generateUniqueName(body.name);
     bodies.push_back(body);
     return &bodies.back();
 }
 
-Body* Bodies::getBodyByName(const std::string& name) {
+Body* Bodies::getBodyByName(const string& name) {
     for (auto &body : bodies) {
         if (body.name == name) {
             return &body;
@@ -61,10 +67,10 @@ void Bodies::addImpulseToBody(Body* body, Vector2 impulse) {
     body->velocity = Vector2Add(body->velocity, Vector2Scale(impulse, deltaTimeInSeconds / body->massradius.mass));
 }
 
-std::vector<std::string> Bodies::SortedNamesByKeyword(const std::string& query) {
-    std::vector<std::string> filtered_bodies;
+vector<string> Bodies::SortedNamesByKeyword(const string& query) {
+    vector<string> filtered_bodies;
     for (auto &body : bodies) {
-        if (body.name.find(query) != std::string::npos) {
+        if (body.name.find(query) != string::npos) {
             filtered_bodies.push_back(body.name);
         }
     }
@@ -76,7 +82,7 @@ int Bodies::getBodyCount(void){
     return bodies.size();
 }
 
-std::string Bodies::getBodyNameByPoint(Vector2 point){
+string Bodies::getBodyNameByPoint(Vector2 point){
     for (auto &body : bodies) {
         if (CheckCollisionCircles(body.center, 50, point, 4)){
             return body.name;

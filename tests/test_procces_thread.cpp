@@ -1,5 +1,5 @@
 #include "process_thread.hpp"
-#include "test_bodies.cpp"
+#include "test_bodies.hpp"
 
 #include <string>
 
