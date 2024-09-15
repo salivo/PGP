@@ -1,7 +1,7 @@
 
 #include "test_bodies.cpp"
 #include "test_bodies.hpp"
-#include "test_procces_thread.cpp"
+#include "test_process_thread.cpp"
 
 
 Test_Bodies testbodies;

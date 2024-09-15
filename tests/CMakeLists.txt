@@ -7,5 +7,5 @@ include_directories(${PROJECT_SOURCE_DIR}/lib)
 target_link_libraries(cpp_test raylib)
 
 add_test(bodies cpp_test "1")
-add_test(procces_thread cpp_test "2")
+add_test(process_thread cpp_test "2")
 # add_test(cpp_test cpp_test "3")
