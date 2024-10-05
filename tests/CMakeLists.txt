@@ -1,11 +1,19 @@
-add_executable(cpp_test main.cpp ${SRC_FILES})
+add_executable(PGP_tests
+    main_tests.cpp
+    test_body.cpp
+    test_space.cpp
+    test_thread.cpp
+    test_space_tasker.cpp
+    ${SRC_FILES})
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/tests/include)
 include_directories(${PROJECT_SOURCE_DIR}/lib)
 
-target_link_libraries(cpp_test raylib)
+target_link_libraries(PGP_tests raylib)
 
-add_test(bodies cpp_test "1")
-add_test(process_thread cpp_test "2")
-# add_test(cpp_test cpp_test "3")
+add_test(body PGP_tests "1")
+add_test(space PGP_tests "2")
+add_test(thread PGP_tests "3")
+add_test(tasker PGP_tests "4")
+add_test(modular PGP_tests "5")

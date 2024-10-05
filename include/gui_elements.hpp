@@ -1,7 +1,8 @@
 #ifndef GUI_ELEMENTS_HPP
 #define GUI_ELEMENTS_HPP
 
-#include "bodies.hpp"
+#include "raygui.h"
+#include "space.hpp"
 #include <raylib.h>
 #include <string>
 #include <map>
@@ -61,7 +62,7 @@ struct ChangerValues{
 
 class GuiElements{
 private:
-    Bodies* bodies;
+    Space* space;
     std::string* body_to_follow;
     Rectangle finder_rect{FINDER_MARGIN, FINDER_MARGIN, FINDER_WIDTH+2*FINDER_PADDING, 0};
     Rectangle params_rect = {
@@ -83,15 +84,30 @@ private:
     };
     Rectangle render_rect = {0, 0, (float)GetRenderWidth(), (float)GetRenderHeight()};
     ChangerValues changervalues;
-    void draw_section(Vector2 &data, TwoStrings names, TwoStrings units);
+    void draw_section(Vector2 data, TwoStrings names, TwoStrings units);
     void ShowBodyParams(Body* Body);
     void ShowParamsChanger();
     void ShowControlPanel();
     std::string ShowBodyFinder();
 
 public:
+    GuiElements(Space* space, std::string* body_to_follow) :
+        space(space), body_to_follow(body_to_follow)
+    {
+        GuiSetStyle(DEFAULT, BORDER_COLOR_PRESSED, ColorToInt(ELEMENTS_ACCENT_COLOR));
+        GuiSetStyle(DEFAULT, BASE_COLOR_PRESSED, ColorToInt(BLACK));
+        GuiSetStyle(DEFAULT, BORDER_WIDTH, 2);
+        GuiSetStyle(DEFAULT, TEXT_COLOR_PRESSED, ColorToInt(ELEMENTS_ACCENT_COLOR));
+        GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt(ELEMENTS_FOCUS_COLOR));
+        GuiSetStyle(DEFAULT, BASE_COLOR_NORMAL, ColorToInt(BLACK));
+        GuiSetStyle(DEFAULT, BASE_COLOR_FOCUSED, ColorToInt(BLACK));
+        GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt(ELEMENTS_FOCUS_COLOR));
+        GuiSetStyle(DEFAULT, BACKGROUND_COLOR, ColorToInt(ELEMENTS_BACKGROUND_COLOR));
+        GuiSetStyle(DEFAULT, LINE_COLOR, ColorToInt(BLACK));
+        GuiSetStyle(SLIDER, BASE_COLOR_PRESSED, 0x838383ff);
+    }
     std::map<int, Rectangle> gui_rects;
-    void DrawAll(Bodies* bodies, std::string* body_to_follow);
+    void DrawAll();
     void disableBodyChoosing();
     void enableBodyChoosing();
     bool isBodyChoosingEnabled();

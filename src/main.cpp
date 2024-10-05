@@ -1,16 +1,17 @@
-
+#include "gui_elements.hpp"
 #include "raylib.h"
 #include "rlgl.h"
 #include "raymath.h"
+#include "space.hpp"
+#include "space_tasker.hpp"
+#include "thread.hpp"
 #include <cstdio>
 #include <string>
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
-
-#include "gui_elements.hpp"
-#include "bodies.hpp"
 using std::string;
-void WorldResizing(Camera2D *camera, Bodies *bodies,
+
+void WorldResizing(Camera2D *camera, Space& space,
                    std::string body_to_follow) {
   if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
     Vector2 delta = GetMouseDelta();
@@ -31,7 +32,7 @@ void WorldResizing(Camera2D *camera, Bodies *bodies,
     camera->zoom = Clamp(camera->zoom * scaleFactor, 0.01f, 100.0f);
   }
   if (body_to_follow != "") {
-    camera->target = bodies->getBodyByName(body_to_follow)->center;
+    camera->target = space.getBodyByName(body_to_follow)->getCenter();
     camera->offset = (Vector2){GetRenderWidth() / 2.0f,
                                GetRenderHeight() / 2.0f};
   }
@@ -52,8 +53,16 @@ int main ()
   SetTargetFPS(120);
 
 
-  Bodies bodies;
-  GuiElements gui_elem;
+  Space space;
+  TaskThread taskthread;
+  SpaceTasker spacetasker(taskthread,space);
+  this_thread::sleep_for(chrono::milliseconds(10));
+  BodyParams bp = {
+      .name = "body 1",
+      .velocity = {0,0},
+  };
+  spacetasker.AddBody(Body(bp));
+  GuiElements gui(&space, &body_to_follow);
   while (!WindowShouldClose()) {
     if (IsKeyPressed(KEY_F11)) {
       ToggleFullscreen();
@@ -62,22 +71,22 @@ int main ()
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
       Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
       bool can_choose = true;
-      for (const auto& pair : gui_elem.gui_rects) {
+      for (const auto& pair : gui.gui_rects) {
         if (CheckCollisionPointRec(GetMousePosition(), pair.second))
         can_choose = false;
       }
       if (can_choose){
-        printf("%s\n",bodies.getBodyNameByPoint(mouseWorldPos).c_str());
-        body_to_follow = bodies.getBodyNameByPoint(mouseWorldPos);
+        printf("%s\n",space.getBodyNameByPoint(mouseWorldPos).c_str());
+        body_to_follow = space.getBodyNameByPoint(mouseWorldPos);
       }
     }
-    WorldResizing(&camera, &bodies, body_to_follow);
+    WorldResizing(&camera, space, body_to_follow);
     BeginDrawing();
     ClearBackground(BLACK);
     BeginMode2D(camera);
-    bodies.drawAll();
+    space.displayAll();
     EndMode2D();
-    gui_elem.DrawAll(&bodies, &body_to_follow);
+    gui.DrawAll();
     EndDrawing();
     }
     CloseWindow();

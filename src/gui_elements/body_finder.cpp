@@ -11,7 +11,7 @@ string GuiElements::ShowBodyFinder(){
     static char last_text[21];
     static int focus = 0;
     string to_return = "";
-    vector<string> sortedBodies = bodies->SortedNamesByKeyword(text);
+    vector<string> sortedBodies = space->SortedNamesByKeyword(text);
     int sortedbodyCount = sortedBodies.size();
 
     finder_rect.height = 2*FINDER_PADDING + H6_TEXT_SIZE+FINDER_TEXT_PADDING + (H6_TEXT_SIZE+FINDER_TEXT_PADDING)*sortedbodyCount;

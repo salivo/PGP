@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void GuiElements::draw_section(Vector2 &data, TwoStrings names, TwoStrings units){
+void GuiElements::draw_section(Vector2 data, TwoStrings names, TwoStrings units){
     static string first_draw_name;
     static int section_draw_count = 0;
     if (section_draw_count == 0){
@@ -60,11 +60,11 @@ void GuiElements::draw_section(Vector2 &data, TwoStrings names, TwoStrings units
     }
 }
 
-void GuiElements::ShowBodyParams(Body* Body){
+void GuiElements::ShowBodyParams(Body* body){
     DrawRectangleRec(params_rect, ELEMENTS_BACKGROUND_COLOR);
     const char buffer_text[21] = "";
     bool editMode = true;
-    DrawText(Body->name.c_str(),
+    DrawText(body->getName().c_str(),
         params_rect.x+BODY_PARAMS_PADDING,
         BODY_PARAMS_PADDING,
         H3_TEXT_SIZE,
@@ -77,10 +77,10 @@ void GuiElements::ShowBodyParams(Body* Body){
         .x = params_rect.x+params_rect.width-BODY_PARAMS_PADDING,
         .y = BODY_PARAMS_PADDING*2+H2_TEXT_SIZE
     }, 1, WHITE);
-    draw_section(Body->center, {"Position"}, {"m"});
-    draw_section(Body->velocity, {"Velocity"}, {"m/s"});
-    draw_section(Body->acceleration, {"Acceleration"}, {"m/s^2"});
-    draw_section(Body->massradius, {"Mass", "Radius"}, {"g", "m"});
+    draw_section(body->getCenter(), {"Position"}, {"m"});
+    draw_section(body->getVelocity(), {"Velocity"}, {"m/s"});
+    draw_section(body->getAcceleration(), {"Acceleration"}, {"m/s^2"});
+    draw_section({body->getMass(), body->getRadius()}, {"Mass", "Radius"}, {"g", "m"});
     bool delete_body = GuiButton({
         params_rect.x + params_rect.width - BODY_PARAMS_DEL_BTN_SIZE - BODY_PARAMS_DEL_BTN_MARGIN,
         params_rect.y + params_rect.height - BODY_PARAMS_DEL_BTN_SIZE - BODY_PARAMS_DEL_BTN_MARGIN,
@@ -88,6 +88,6 @@ void GuiElements::ShowBodyParams(Body* Body){
         BODY_PARAMS_DEL_BTN_SIZE
     }, "#143#");
     if (delete_body){
-        bodies->deleteBody(Body);
+        // bodies->deleteBody(Body);
     }
 }
