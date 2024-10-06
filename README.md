@@ -11,7 +11,9 @@ and more...
 - [X] Visulizate body
 - [X] Control world with mouse
 - [X] Body finder
-- [ ] Show body parameters
+- [X] Show body parameters
+- [ ] Add ability to change delta and canculation per second
+- [ ] Add Pause
 - [ ] Add gravity processing 
 
 # Used Technologies
