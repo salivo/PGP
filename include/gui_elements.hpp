@@ -3,6 +3,7 @@
 
 #include "raygui.h"
 #include "space.hpp"
+#include "space_tasker.hpp"
 #include <raylib.h>
 #include <string>
 #include <map>
@@ -63,6 +64,7 @@ struct ChangerValues{
 class GuiElements{
 private:
     Space* space;
+    SpaceTasker* spacetasker;
     std::string* body_to_follow;
     Rectangle finder_rect{FINDER_MARGIN, FINDER_MARGIN, FINDER_WIDTH+2*FINDER_PADDING, 0};
     Rectangle params_rect = {
@@ -91,8 +93,8 @@ private:
     std::string ShowBodyFinder();
 
 public:
-    GuiElements(Space* space, std::string* body_to_follow) :
-        space(space), body_to_follow(body_to_follow)
+    GuiElements(Space* space, std::string* body_to_follow, SpaceTasker* spacetasker) :
+        space(space), body_to_follow(body_to_follow), spacetasker(spacetasker)
     {
         GuiSetStyle(DEFAULT, BORDER_COLOR_PRESSED, ColorToInt(ELEMENTS_ACCENT_COLOR));
         GuiSetStyle(DEFAULT, BASE_COLOR_PRESSED, ColorToInt(BLACK));

@@ -61,8 +61,8 @@ int main ()
       .name = "body 1",
       .velocity = {0,0},
   };
-  spacetasker.AddBody(Body(bp));
-  GuiElements gui(&space, &body_to_follow);
+  // spacetasker.AddBody(Body(bp));
+  GuiElements gui(&space, &body_to_follow, &spacetasker);
   while (!WindowShouldClose()) {
     if (IsKeyPressed(KEY_F11)) {
       ToggleFullscreen();

@@ -1,8 +1,37 @@
 #include "space.hpp"
 #include "body.hpp"
+#include <algorithm>
 
 void Space::addBody(Body body) {
+    body.setName(defaultNameforEmpty(body.getName()));
+    body.setName(generateUniqueName(body.getName()));
     bodies.push_back(body);
+
+}
+
+std::string Space::generateUniqueName(const std::string& baseName) {
+    int counter = 1;
+    std::string newName = baseName;
+
+    auto nameExists = [&](const std::string& name) {
+        return std::find_if(bodies.begin(), bodies.end(), [&](const Body& body) {
+            return body.getName() == name;
+        }) != bodies.end();
+    };
+
+    while (nameExists(newName)) {
+        newName = baseName + "_" + std::to_string(counter);
+        ++counter;
+    }
+
+    return newName;
+}
+
+std::string Space::defaultNameforEmpty(const std::string& baseName){
+    if (baseName == ""){
+        return DEFAULT_NAME;
+    }
+    return baseName;
 }
 
 void Space::delBody(Body* targetBody) {

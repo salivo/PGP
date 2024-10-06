@@ -54,6 +54,7 @@ public:
 
     friend class TestBody;
     friend class BodyPhysics;
+    friend class Space;
 
     Body(const BodyParams& params)
         : name(params.name), center(params.center), velocity(params.velocity),

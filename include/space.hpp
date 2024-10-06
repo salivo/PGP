@@ -9,9 +9,13 @@
 #include "body.hpp"
 #include "physics.hpp"
 
+#define DEFAULT_NAME "NewBody"
+
 class Space{
     private:
         std::deque<Body> bodies;
+        std::string generateUniqueName(const std::string& baseName);
+        std::string defaultNameforEmpty(const std::string& baseName);
     protected:
         void addBody(Body body);
         void delBody(Body* targetBody);

@@ -1,8 +1,11 @@
+#include "body.hpp"
 #include "raygui.h"
 
 #include "gui_elements.hpp"
 #include <cstddef>
+#include <iostream>
 #include <raylib.h>
+#include <string>
 
 using namespace std;
 float value = 0;
@@ -45,7 +48,8 @@ void GuiElements::ShowControlPanel(){
     bool add_btn = GuiButton(adder_rect, "+");
     bool find_btn = GuiButton(find_rect, "#42#");
     if (add_btn){
-        // TODO: add body
+        spacetasker->AddBody(Body(BodyParams()));
+        *body_to_follow =""; // here i want to asign created body name hoe to do that
     }
     if (find_btn){
         gui_rects[RECT_FINDER] = finder_rect;
