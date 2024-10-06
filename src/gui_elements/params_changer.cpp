@@ -5,9 +5,10 @@
 
 #include <cmath>
 #include <cstring>
+#include <iostream>
+#include <ostream>
 
 using namespace std;
-
 void GuiElements::ShowParamsChanger(){
     static int active;
     static bool editMode = false;
@@ -90,6 +91,7 @@ void GuiElements::ShowParamsChanger(){
     if (done || IsKeyPressed(KEY_ENTER)){
         if (*endptr == '\0' && endptr != stringvalue) {
             *changervalues.value = newValue * pow(10.0, getUnitPrefixbByCount(active).exponent);
+            changervalues.setValue(*changervalues.value);
         }
         doStuffToExit();
     }

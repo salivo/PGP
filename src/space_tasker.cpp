@@ -1,7 +1,6 @@
 #include "space_tasker.hpp"
 #include "body.hpp"
 
-
 void SpaceTasker::delayedUpdate() {
     while (running) {
     this_thread::sleep_for(
@@ -21,10 +20,29 @@ SpaceTasker::SpaceTasker(TaskThread& _spacethread, Space& _space) :
     th = thread(&SpaceTasker::delayedUpdate, this);
 }
 
-void SpaceTasker::AddBody(Body body){
+void SpaceTasker::AddBody(Body body, std::shared_ptr<std::string> bodyName){
     taskthread.addTask(
-        [this, body](){
-            space.addBody(body);
+        [this, body, bodyName](){
+            string name = space.addBody(body);
+            if (bodyName != nullptr){
+                *bodyName = name;
+            }
+        }
+    );
+}
+
+void SpaceTasker::DelBody(const std::string& name){
+    taskthread.addTask(
+        [this, name](){
+            space.delBody(name);
+        }
+    );
+}
+
+void SpaceTasker::setParams(Body* body, const BodyParams& params) {
+    taskthread.addTask(
+        [this, body, params](){
+            space.setParameters(body, params);
         }
     );
 }

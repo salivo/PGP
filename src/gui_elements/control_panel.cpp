@@ -2,8 +2,8 @@
 #include "raygui.h"
 
 #include "gui_elements.hpp"
+#include <chrono>
 #include <cstddef>
-#include <iostream>
 #include <raylib.h>
 #include <string>
 
@@ -48,8 +48,14 @@ void GuiElements::ShowControlPanel(){
     bool add_btn = GuiButton(adder_rect, "+");
     bool find_btn = GuiButton(find_rect, "#42#");
     if (add_btn){
-        spacetasker->AddBody(Body(BodyParams()));
-        *body_to_follow =""; // here i want to asign created body name hoe to do that
+        std::shared_ptr<std::string> bodyName = std::make_shared<std::string>();
+        spacetasker->AddBody(Body(BodyParams({
+
+        })), bodyName);
+        while (*bodyName == "") {
+            std::this_thread::sleep_for(std::chrono::microseconds(10000));  // Wait
+        }
+        *body_to_follow = *bodyName;
     }
     if (find_btn){
         gui_rects[RECT_FINDER] = finder_rect;

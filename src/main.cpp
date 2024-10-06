@@ -61,7 +61,6 @@ int main ()
       .name = "body 1",
       .velocity = {0,0},
   };
-  // spacetasker.AddBody(Body(bp));
   GuiElements gui(&space, &body_to_follow, &spacetasker);
   while (!WindowShouldClose()) {
     if (IsKeyPressed(KEY_F11)) {
@@ -76,7 +75,6 @@ int main ()
         can_choose = false;
       }
       if (can_choose){
-        printf("%s\n",space.getBodyNameByPoint(mouseWorldPos).c_str());
         body_to_follow = space.getBodyNameByPoint(mouseWorldPos);
       }
     }

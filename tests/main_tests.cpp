@@ -17,10 +17,11 @@ int TestALLModular(){
     delayms(1);
     s.physics.setDelta(1);
     st.setCanculationsPerSecond(10);
-    BodyParams bp = {
-        .name = "hello",
-        .velocity = {1,0},
-    };
+    BodyParams bp = test_body_params;
+    bp.name = "hello";
+    bp.center = {0,0};
+    bp.velocity = {1,0};
+    bp.acceleration = {0,0};
     st.AddBody(Body(bp));
     delayms(100);
     Body* foundBody = s.getBodyByName(bp.name);

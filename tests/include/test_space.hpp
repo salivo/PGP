@@ -7,6 +7,7 @@ public:
 
 private:
     static int checkAddRem();
+    static int checkParamSetting();
 };
 
 #endif

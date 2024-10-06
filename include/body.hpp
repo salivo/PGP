@@ -1,17 +1,18 @@
 #ifndef BODY_HPP
 #define BODY_HPP
 
+#include <cmath>
 #include <raylib.h>
 #include <string>
 
 class BodyParams {
 public:
-    std::string name;
-    Vector2 center = {0, 0};
-    Vector2 velocity = {0, 0};
-    Vector2 acceleration = {0, 0};
-    float mass = 0.0f;
-    float radius = 0.0f;
+    std::string name = "";
+    Vector2 center = {NAN, NAN};
+    Vector2 velocity = {NAN, NAN};
+    Vector2 acceleration = {NAN, NAN};
+    float mass = NAN;
+    float radius = NAN;
 };
 
 class Body {
@@ -36,6 +37,8 @@ protected:
 
     void setRadius(float radius);
 
+    void setParameters(const BodyParams& params);
+
 public:
     // Getters
     const std::string getName() const;
@@ -56,9 +59,7 @@ public:
     friend class BodyPhysics;
     friend class Space;
 
-    Body(const BodyParams& params)
-        : name(params.name), center(params.center), velocity(params.velocity),
-          acceleration(params.acceleration), mass(params.mass), radius(params.radius) {}
+    Body(const BodyParams& params);
 };
 
 #endif

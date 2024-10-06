@@ -12,7 +12,9 @@ class SpaceTasker{
 public:
     SpaceTasker(TaskThread& _spacethread, Space& _space);
     ~SpaceTasker();
-    void AddBody(Body body);
+    void AddBody(Body body, std::shared_ptr<std::string> bodyName = nullptr);
+    void DelBody(const std::string& name);
+    void setParams(Body* body, const BodyParams& params);
     void setCanculationsPerSecond(int amount);
     int getCanculationsPerSecond();
 private:

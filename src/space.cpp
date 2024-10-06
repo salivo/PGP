@@ -1,12 +1,14 @@
 #include "space.hpp"
 #include "body.hpp"
 #include <algorithm>
+#include <raylib.h>
+#include <string>
 
-void Space::addBody(Body body) {
+std::string Space::addBody(Body body) {
     body.setName(defaultNameforEmpty(body.getName()));
     body.setName(generateUniqueName(body.getName()));
     bodies.push_back(body);
-
+    return body.getName();
 }
 
 std::string Space::generateUniqueName(const std::string& baseName) {
@@ -34,14 +36,45 @@ std::string Space::defaultNameforEmpty(const std::string& baseName){
     return baseName;
 }
 
-void Space::delBody(Body* targetBody) {
-    for (auto it = bodies.begin(); it != bodies.end(); ++it) {
-        if (&(*it) == targetBody) {
-            bodies.erase(it);
-            break;
-        }
-    }
+void Space::delBody(const std::string& name) {
+    bodies.erase(std::remove_if(bodies.begin(), bodies.end(),
+        [&name](const Body& body) {
+            return body.getName() == name; // Compare the names
+        }), bodies.end());
 }
+
+void Space::setParameters(Body* body, const BodyParams &params){
+    BodyParams pcopy = params;
+    if (pcopy.name == ""){
+        pcopy.name = body->getName();
+    }
+    if (std::isnan(params.center.x)){
+        pcopy.center.x = body->getCenter().x;
+    }
+    if (std::isnan(params.center.y)){
+        pcopy.center.y = body->getCenter().y;
+    }
+    if (std::isnan(params.velocity.x)){
+        pcopy.velocity.x = body->getVelocity().x;
+    }
+    if (std::isnan(params.velocity.y)){
+        pcopy.velocity.y = body->getVelocity().y;
+    }
+    if (std::isnan(params.acceleration.x)){
+        pcopy.acceleration.x = body->getAcceleration().x;
+    }
+    if (std::isnan(params.acceleration.y)){
+        pcopy.acceleration.y = body->getAcceleration().y;
+    }
+    if (std::isnan(params.mass)){
+        pcopy.mass = body->getMass();
+    }
+    if (std::isnan(params.radius)){
+        pcopy.radius = body->getRadius();
+    }
+    body->setParameters(pcopy);
+}
+
 
 int Space::getBodyCount(){
     return bodies.size();

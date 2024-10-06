@@ -1,6 +1,50 @@
 #include "body.hpp"
 #include <raylib.h>
 
+
+Body::Body(const BodyParams& params){
+    BodyParams pcopy = params;
+    if (std::isnan(params.center.x)){
+        pcopy.center.x = 0.0;
+    }
+    if (std::isnan(params.center.y)){
+        pcopy.center.y = 0.0;
+    }
+    if (std::isnan(params.velocity.x)){
+        pcopy.velocity.x = 0.0;
+    }
+    if (std::isnan(params.velocity.y)){
+        pcopy.velocity.y = 0.0;
+    }
+    if (std::isnan(params.acceleration.x)){
+        pcopy.acceleration.x = 0.0;
+    }
+    if (std::isnan(params.acceleration.y)){
+        pcopy.acceleration.y = 0.0;
+    }
+    if (std::isnan(params.mass)){
+        pcopy.mass = 0.0;
+    }
+    if (std::isnan(params.radius)){
+        pcopy.radius = 0.0;
+    }
+    name = pcopy.name;
+    center = pcopy.center;
+    velocity = pcopy.velocity;
+    acceleration = pcopy.acceleration;
+    mass = pcopy.mass;
+    radius = pcopy.radius;
+}
+
+void Body::setParameters(const BodyParams &params){
+    name = params.name;
+    center = params.center;
+    velocity = params.velocity;
+    acceleration = params.acceleration;
+    mass = params.mass;
+    radius = params.radius;
+}
+
 void Body::setName(const std::string& name) {
     this->name = name;
 }

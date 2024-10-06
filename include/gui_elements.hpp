@@ -4,6 +4,7 @@
 #include "raygui.h"
 #include "space.hpp"
 #include "space_tasker.hpp"
+#include <functional>
 #include <raylib.h>
 #include <string>
 #include <map>
@@ -59,6 +60,12 @@ struct ChangerValues{
     float* value = nullptr;
     std::string unit = "";
     std::string name = "";
+    function<void(float value)> setValue;
+};
+
+struct ValuesSetterVector{
+    function<void(float value)> setValueX;
+    function<void(float value)> setValueY;
 };
 
 class GuiElements{
@@ -86,7 +93,7 @@ private:
     };
     Rectangle render_rect = {0, 0, (float)GetRenderWidth(), (float)GetRenderHeight()};
     ChangerValues changervalues;
-    void draw_section(Vector2 data, TwoStrings names, TwoStrings units);
+    void draw_section(Vector2 data, TwoStrings names, TwoStrings units, ValuesSetterVector changevalue);
     void ShowBodyParams(Body* Body);
     void ShowParamsChanger();
     void ShowControlPanel();

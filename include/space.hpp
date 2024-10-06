@@ -2,6 +2,7 @@
 #define SPACE_HPP
 
 #include <deque>
+#include <functional>
 #include <raylib.h>
 #include <string>
 #include <vector>
@@ -17,15 +18,16 @@ class Space{
         std::string generateUniqueName(const std::string& baseName);
         std::string defaultNameforEmpty(const std::string& baseName);
     protected:
-        void addBody(Body body);
-        void delBody(Body* targetBody);
+        std::string addBody(Body body);
+        void delBody(const std::string& name);
+        void setParameters(Body* body, const BodyParams &params);
+        void update();
     public:
         BodyPhysics physics;
         int getBodyCount();
         Body *getBodyByName(std::string name);
         std::string getBodyNameByPoint(Vector2 point);
         std::vector<std::string> SortedNamesByKeyword(const std::string& query);
-        void update();
         void displayAll();
         friend class SpaceTasker;
         friend class TestSpace;
