@@ -1,3 +1,4 @@
+#include "body.hpp"
 #include "gui_elements.hpp"
 #include "raylib.h"
 #include "rlgl.h"
@@ -32,9 +33,12 @@ void WorldResizing(Camera2D *camera, Space& space,
     camera->zoom = Clamp(camera->zoom * scaleFactor, 0.01f, 100.0f);
   }
   if (body_to_follow != "") {
-    camera->target = space.getBodyByName(body_to_follow)->getCenter();
-    camera->offset = (Vector2){GetRenderWidth() / 2.0f,
-                               GetRenderHeight() / 2.0f};
+    Body* b = space.getBodyByName(body_to_follow);
+    if (b){
+        camera->target = Vector2Scale(b->getCenter(), 1.0/METERS_TO_PIXELS);
+        camera->offset = (Vector2){GetRenderWidth() / 2.0f,
+                                GetRenderHeight() / 2.0f};
+    }
   }
 }
 

@@ -50,7 +50,7 @@
 
 #define EXIT_WITHOUT_CHOOSING "IWANTJUSTEXITPLEASELEAVEME" // I know that it isn't good solution
 
-enum{RECT_FINDER,RECT_PARAMS,RECT_CHANGER,RECT_ALL,RECT_CTRL_PANEL};
+enum{RECT_FINDER,RECT_PARAMS,RECT_CHANGER,RECT_ALL,RECT_CTRL_PANEL,NAME_CHANGER};
 
 struct TwoStrings {
     std::string s1 = "";
@@ -92,13 +92,20 @@ private:
         CONTROL_PANEL_HEIGHT
     };
     Rectangle render_rect = {0, 0, (float)GetRenderWidth(), (float)GetRenderHeight()};
+    Rectangle name_changer_rect = {
+        static_cast<float>((GetRenderWidth()-GetRenderWidth()*CHANGER_WIDTH_PERCENT)*0.5),
+        static_cast<float>((GetRenderHeight()-CHANGER_HEIGHT)*0.5),
+        static_cast<float>(GetRenderWidth()*CHANGER_WIDTH_PERCENT),
+        CHANGER_HEIGHT,
+    };
     ChangerValues changervalues;
     void draw_section(Vector2 data, TwoStrings names, TwoStrings units, ValuesSetterVector changevalue);
     void ShowBodyParams(Body* Body);
     void ShowParamsChanger();
     void ShowControlPanel();
+    void ShowNameChanger();
     std::string ShowBodyFinder();
-
+    string name_to_change = "";
 public:
     GuiElements(Space* space, std::string* body_to_follow, SpaceTasker* spacetasker) :
         space(space), body_to_follow(body_to_follow), spacetasker(spacetasker)

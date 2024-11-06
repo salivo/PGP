@@ -5,6 +5,7 @@
 #include <raylib.h>
 #include <string>
 
+
 class BodyParams {
 public:
     std::string name = "";
@@ -53,7 +54,7 @@ public:
 
     float getRadius() const;
 
-    void display() const;
+    void display(int scale) const;
 
     friend class TestBody;
     friend class BodyPhysics;

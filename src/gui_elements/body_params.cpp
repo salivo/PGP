@@ -67,11 +67,20 @@ void GuiElements::ShowBodyParams(Body* body){
     DrawRectangleRec(params_rect, ELEMENTS_BACKGROUND_COLOR);
     const char buffer_text[21] = "";
     bool editMode = true;
-    DrawText(body->getName().c_str(),
-        params_rect.x+BODY_PARAMS_PADDING,
-        BODY_PARAMS_PADDING,
-        H3_TEXT_SIZE,
-        WHITE);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, H2_TEXT_SIZE);
+    bool change_name = GuiLabelButton(
+        {
+            params_rect.x+BODY_PARAMS_PADDING,
+            BODY_PARAMS_PADDING,
+            params_rect.width - 2*BODY_PARAMS_PADDING,
+            H3_TEXT_SIZE
+        },
+        body->getName().c_str());
+    if (change_name){
+        name_to_change = body->getName();
+    }
+    Body* b = space->getBodyByName(*body_to_follow);
+    if (!b) return;
     DrawLineEx({
         .x = params_rect.x+BODY_PARAMS_PADDING,
         .y = BODY_PARAMS_PADDING*2+H2_TEXT_SIZE
@@ -82,38 +91,38 @@ void GuiElements::ShowBodyParams(Body* body){
     }, 1, WHITE);
     draw_section(body->getCenter(), {"Position"}, {"m"},
         {
-            .setValueX = [this](float value){
-                spacetasker->setParams(space->getBodyByName(*body_to_follow), {.center = {value, NAN}});
+            .setValueX = [this, b](float value){
+                spacetasker->setParams(b, {.center = {value, NAN}});
             },
-            .setValueY = [this](float value){
-                spacetasker->setParams(space->getBodyByName(*body_to_follow), {.center = {NAN, value}});
+            .setValueY = [this, b](float value){
+                spacetasker->setParams(b, {.center = {NAN, value}});
             }
         });
     draw_section(body->getVelocity(), {"Velocity"}, {"m/s"},
         {
-            .setValueX = [this](float value){
-                spacetasker->setParams(space->getBodyByName(*body_to_follow), {.velocity = {value, NAN}});
+            .setValueX = [this, b](float value){
+                spacetasker->setParams(b, {.velocity = {value, NAN}});
             },
-            .setValueY = [this](float value){
-                spacetasker->setParams(space->getBodyByName(*body_to_follow), {.velocity = {NAN, value}});
+            .setValueY = [this, b](float value){
+                spacetasker->setParams(b, {.velocity = {NAN, value}});
             }
         });
     draw_section(body->getAcceleration(), {"Acceleration"}, {"m/s^2"},
         {
-        .setValueX = [this](float value){
-            spacetasker->setParams(space->getBodyByName(*body_to_follow), {.acceleration = {value, NAN}});
+        .setValueX = [this, b](float value){
+            spacetasker->setParams(b, {.acceleration = {value, NAN}});
         },
-        .setValueY = [this](float value){
-            spacetasker->setParams(space->getBodyByName(*body_to_follow), {.acceleration = {NAN, value}});
+        .setValueY = [this, b](float value){
+            spacetasker->setParams(b, {.acceleration = {NAN, value}});
         }
     });
     draw_section({body->getMass(), body->getRadius()}, {"Mass", "Radius"}, {"g", "m"},
         {
-        .setValueX = [this](float value){
-            spacetasker->setParams(space->getBodyByName(*body_to_follow), {.mass = value});
+        .setValueX = [this, b](float value){
+            spacetasker->setParams(b, {.mass = value});
         },
-        .setValueY = [this](float value){
-            spacetasker->setParams(space->getBodyByName(*body_to_follow), {.radius = value});
+        .setValueY = [this, b](float value){
+            spacetasker->setParams(b, {.radius = value});
         }
     });
     bool delete_body = GuiButton({

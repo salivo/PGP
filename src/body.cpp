@@ -1,5 +1,6 @@
 #include "body.hpp"
 #include <raylib.h>
+#include <raymath.h>
 
 
 Body::Body(const BodyParams& params){
@@ -93,7 +94,7 @@ float Body::getRadius() const {
     return radius;
 }
 
-void Body::display() const {
-    DrawCircleV(center, 50, MAROON);
-    // std::cout << "center: " << center.x << " " << center.y << std::endl;
+void Body::display(int scale) const {
+    Vector2 pixels_center = Vector2Scale(center, 1.0/scale);
+    DrawCircleV(pixels_center, radius/scale, MAROON);
 }

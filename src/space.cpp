@@ -2,6 +2,7 @@
 #include "body.hpp"
 #include <algorithm>
 #include <raylib.h>
+#include <raymath.h>
 #include <string>
 
 std::string Space::addBody(Body body) {
@@ -91,7 +92,12 @@ Body* Space::getBodyByName(std::string name) {
 
 std::string Space::getBodyNameByPoint(Vector2 point) {
     for (auto &body : bodies) {
-        if (CheckCollisionCircles(body.getCenter(), 50, point, 4)){  //TODO: that's smells dirty
+        if (CheckCollisionCircles(
+            Vector2Scale(body.getCenter(), 1.0/METERS_TO_PIXELS),
+            body.getRadius()/METERS_TO_PIXELS,
+            point,
+            GET_BY_POINT_THRESHOLD
+        )){
             return body.getName();
         }
     }

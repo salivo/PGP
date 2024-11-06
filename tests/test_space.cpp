@@ -38,7 +38,7 @@ int TestSpace::checkParamSetting(){
     if (b->getCenter().y != test_body_params.center.y) return 1;
     s.setParameters(b, {.center {NAN, 321}});
     if (b->getCenter().x != 123) return 1;
-    //if (b->getCenter().y != 321) return 1;
+    if (b->getCenter().y != 321) return 1;
     s.setParameters(b, {.center {456,654}});
     if (b->getCenter().x != 456) return 1;
     if (b->getCenter().y != 654) return 1;

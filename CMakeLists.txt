@@ -19,6 +19,7 @@ set(SRC_GUI_FILES
     ${PROJECT_SOURCE_DIR}/src/gui_elements/body_finder.cpp
     ${PROJECT_SOURCE_DIR}/src/gui_elements/body_params.cpp
     ${PROJECT_SOURCE_DIR}/src/gui_elements/params_changer.cpp
+    ${PROJECT_SOURCE_DIR}/src/gui_elements/name_changer.cpp
 )
 
 add_executable(${PROJECT_NAME}

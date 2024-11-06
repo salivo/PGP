@@ -6,9 +6,16 @@
 using namespace std;
 
 
-
-
 void GuiElements::DrawAll(){
+    if (name_to_change != ""){
+        ShowNameChanger();
+        gui_rects[NAME_CHANGER] = changer_rect;
+    }
+    else{
+        if (gui_rects.find(NAME_CHANGER) != gui_rects.end()){
+            gui_rects.erase(NAME_CHANGER);
+        }
+    }
     gui_rects[RECT_CTRL_PANEL] = control_panel_rect;
     ShowControlPanel();
     if (changervalues.value != nullptr){
@@ -33,9 +40,12 @@ void GuiElements::DrawAll(){
         }
     }
     if ((*body_to_follow) != ""){
-        ShowBodyParams(space->getBodyByName(*body_to_follow));
-        gui_rects[RECT_PARAMS] = params_rect;
-        control_panel_rect.width = GetRenderWidth() - params_rect.width - 2*CONTROL_PANEL_MARGIN;
+        Body* b = space->getBodyByName(*body_to_follow);
+        if (b){
+            ShowBodyParams(b);
+            gui_rects[RECT_PARAMS] = params_rect;
+            control_panel_rect.width = GetRenderWidth() - params_rect.width - 2*CONTROL_PANEL_MARGIN;
+        }
     }
     else {
         gui_rects.erase(RECT_PARAMS);

@@ -11,6 +11,8 @@
 #include "physics.hpp"
 
 #define DEFAULT_NAME "NewBody"
+#define GET_BY_POINT_THRESHOLD 4
+#define METERS_TO_PIXELS 100000
 
 class Space{
     private:
