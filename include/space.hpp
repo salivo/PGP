@@ -2,7 +2,6 @@
 #define SPACE_HPP
 
 #include <deque>
-#include <functional>
 #include <raylib.h>
 #include <string>
 #include <vector>
@@ -12,7 +11,11 @@
 
 #define DEFAULT_NAME "NewBody"
 #define GET_BY_POINT_THRESHOLD 4
-#define METERS_TO_PIXELS 100000
+
+struct Scales {
+    float distance_scale = 1;
+    float size_scale = 1;
+};
 
 class Space{
     private:
@@ -28,9 +31,9 @@ class Space{
         BodyPhysics physics;
         int getBodyCount();
         Body *getBodyByName(std::string name);
-        std::string getBodyNameByPoint(Vector2 point);
+        std::string getBodyNameByPoint(Vector2 point, Scales scales);
         std::vector<std::string> SortedNamesByKeyword(const std::string& query);
-        void displayAll();
+        void displayAll(Scales scales);
         friend class SpaceTasker;
         friend class TestSpace;
 };

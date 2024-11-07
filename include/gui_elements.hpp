@@ -24,6 +24,7 @@
 #define CONTROL_PANEL_PADDING 10
 #define CONTROL_PANEL_GAP 15
 #define CONTROL_PANEL_SLIDER_HEIGHT 15
+#define CONTROL_PANEL_SLIDER_WIDTH 100
 
 #define CHANGER_WIDTH_PERCENT 0.25
 #define CHANGER_HEIGHT 150
@@ -73,6 +74,7 @@ private:
     Space* space;
     SpaceTasker* spacetasker;
     std::string* body_to_follow;
+    Scales* scales;
     Rectangle finder_rect{FINDER_MARGIN, FINDER_MARGIN, FINDER_WIDTH+2*FINDER_PADDING, 0};
     Rectangle params_rect = {
       (float)(GetRenderWidth()-GetRenderWidth()*BODY_PARAMS_WIDTH_PERCENT),
@@ -107,8 +109,8 @@ private:
     std::string ShowBodyFinder();
     string name_to_change = "";
 public:
-    GuiElements(Space* space, std::string* body_to_follow, SpaceTasker* spacetasker) :
-        space(space), body_to_follow(body_to_follow), spacetasker(spacetasker)
+    GuiElements(Space* space, std::string* body_to_follow, SpaceTasker* spacetasker, Scales* scales) :
+        space(space), body_to_follow(body_to_follow), spacetasker(spacetasker), scales(scales)
     {
         GuiSetStyle(DEFAULT, BORDER_COLOR_PRESSED, ColorToInt(ELEMENTS_ACCENT_COLOR));
         GuiSetStyle(DEFAULT, BASE_COLOR_PRESSED, ColorToInt(BLACK));

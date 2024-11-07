@@ -1,6 +1,5 @@
 #include "gui_elements.hpp"
 #include <cstring>
-#include <iostream>
 
 void GuiElements::ShowNameChanger(){
     static bool active = false;

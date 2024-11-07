@@ -54,7 +54,7 @@ public:
 
     float getRadius() const;
 
-    void display(int scale) const;
+    void display(int distance_scale, int size_scale) const;
 
     friend class TestBody;
     friend class BodyPhysics;

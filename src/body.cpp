@@ -94,7 +94,7 @@ float Body::getRadius() const {
     return radius;
 }
 
-void Body::display(int scale) const {
-    Vector2 pixels_center = Vector2Scale(center, 1.0/scale);
-    DrawCircleV(pixels_center, radius/scale, MAROON);
+void Body::display(int distance_scale, int size_scale) const {
+    Vector2 pixels_center = Vector2Scale(center, 1.0/distance_scale);
+    DrawCircleV(pixels_center, radius/size_scale, MAROON);
 }

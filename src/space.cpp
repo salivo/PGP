@@ -90,11 +90,11 @@ Body* Space::getBodyByName(std::string name) {
     return nullptr;
 }
 
-std::string Space::getBodyNameByPoint(Vector2 point) {
+std::string Space::getBodyNameByPoint(Vector2 point, Scales scales) {
     for (auto &body : bodies) {
         if (CheckCollisionCircles(
-            Vector2Scale(body.getCenter(), 1.0/METERS_TO_PIXELS),
-            body.getRadius()/METERS_TO_PIXELS,
+            Vector2Scale(body.getCenter(), 1.0/scales.distance_scale),
+            body.getRadius()/scales.size_scale,
             point,
             GET_BY_POINT_THRESHOLD
         )){
@@ -117,8 +117,8 @@ std::vector<std::string> Space::SortedNamesByKeyword(const std::string& query) {
 void Space::update(){
     physics.applyPhysics(bodies);
 }
-void Space::displayAll(){
+void Space::displayAll(Scales scales){
     for (auto it = bodies.begin(); it != bodies.end(); ++it) {
-        it->display();
+        it->display(scales.distance_scale, scales.size_scale);
     }
 }

@@ -13,7 +13,7 @@
 using std::string;
 
 void WorldResizing(Camera2D *camera, Space& space,
-                   std::string body_to_follow) {
+                   std::string body_to_follow, Scales scales) {
   if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
     Vector2 delta = GetMouseDelta();
     delta = Vector2Scale(delta, -1.0f / camera->zoom);
@@ -35,17 +35,20 @@ void WorldResizing(Camera2D *camera, Space& space,
   if (body_to_follow != "") {
     Body* b = space.getBodyByName(body_to_follow);
     if (b){
-        camera->target = Vector2Scale(b->getCenter(), 1.0/METERS_TO_PIXELS);
+        camera->target = Vector2Scale(b->getCenter(), 1.0/scales.distance_scale);
         camera->offset = (Vector2){GetRenderWidth() / 2.0f,
                                 GetRenderHeight() / 2.0f};
     }
   }
 }
 
+
+
 int main ()
 {
   string body_to_follow = "";
   bool drawBodyFinder = false;
+  Scales scales;
   const int WindowWidth = GetMonitorWidth(GetCurrentMonitor());
   const int WindowHeight = GetMonitorHeight(GetCurrentMonitor());
   SetConfigFlags(FLAG_MSAA_4X_HINT);
@@ -55,8 +58,6 @@ int main ()
   Camera2D camera = {0};
   camera.zoom = 1.0f;
   SetTargetFPS(120);
-
-
   Space space;
   TaskThread taskthread;
   SpaceTasker spacetasker(taskthread,space);
@@ -65,7 +66,7 @@ int main ()
       .name = "body 1",
       .velocity = {0,0},
   };
-  GuiElements gui(&space, &body_to_follow, &spacetasker);
+  GuiElements gui(&space, &body_to_follow, &spacetasker, &scales);
   while (!WindowShouldClose()) {
     if (IsKeyPressed(KEY_F11)) {
       ToggleFullscreen();
@@ -79,14 +80,14 @@ int main ()
         can_choose = false;
       }
       if (can_choose){
-        body_to_follow = space.getBodyNameByPoint(mouseWorldPos);
+        body_to_follow = space.getBodyNameByPoint(mouseWorldPos, scales);
       }
     }
-    WorldResizing(&camera, space, body_to_follow);
+    WorldResizing(&camera, space, body_to_follow, scales);
     BeginDrawing();
     ClearBackground(BLACK);
     BeginMode2D(camera);
-    space.displayAll();
+    space.displayAll(scales);
     EndMode2D();
     gui.DrawAll();
     EndDrawing();
